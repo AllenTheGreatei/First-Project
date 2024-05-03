@@ -429,6 +429,10 @@ hr {
   padding: 14px 23px;
 }
 
+.user-list-table thead tr th {
+  color: white;
+}
+
 .user-list-table tbody tr {
   border-bottom: 1px solid #dddddd;
 }
@@ -461,4 +465,62 @@ hr {
 
 .user-list-table tbody tr .delete-room-btn {
   background-color: #dc143c;
+}
+
+/* category */
+
+.category-container {
+  width: 100%;
+  padding: 1em 2em;
+}
+
+.category-container .wrap {
+  /* background-color: #787bff; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-list-table tbody tr .update-category-btn {
+  margin-right: 1em;
+  background-color: #1e90ff;
+}
+
+.user-list-table tbody tr .delete-category-btn {
+  background-color: #dc143c;
+}
+
+/* facility */
+.facility-container {
+  width: 100%;
+  padding: 1em 2em;
+}
+
+.facility-container .box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding: 1em 1em 0 1em;
+}
+
+.user-list-table tbody tr .update-facility-btn {
+  margin-right: 1em;
+  background-color: #1e90ff;
+}
+
+.user-list-table tbody tr .delete-facility-btn {
+  background-color: #dc143c;
+}
+
+/* feature */
+
+.faeture-container {
+  width: 100%;
+  padding: 1em 2em;
+}
+
+.faeture-container .box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding: 1em 1em 0 1em;
 }

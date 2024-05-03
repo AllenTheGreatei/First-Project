@@ -57,8 +57,13 @@
         <div class="rows">
             <label for="roomName">Category<span style="color:red"> *</span></label>
             <select class="form-control" name="category" id="category">
-                <option value="Delux">Delux</option>
-                <option value="Delux">Delux</option>
+                @if ($categories)
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->Name }}</option>
+                    @endforeach
+                @else
+                    <option">No Available category</option>
+                @endif
             </select>
         </div>
 

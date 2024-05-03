@@ -84,8 +84,16 @@ $(document).ready(function () {
   $('#viewroom').click(function () {
     $('.dashboard-container').load(viewroomRoute);
   });
-});
 
-// $('#dashboard').click(function () {
-//   $('.dashboard-container').load(dashboardRoute);
-// });
+  $('#category').click(function () {
+    $('.dashboard-container').load(category);
+  });
+
+  $('#facility').on('click', function () {
+    $('.dashboard-container').load(facilityRoute);
+  });
+
+  $('#feature').on('click', function () {
+    $('.dashboard-container').load(feature);
+  });
+});

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Models\Room_Category;
+use App\Models\Facility;
 
 class AdminNavigationController extends Controller
 {
@@ -36,12 +38,42 @@ class AdminNavigationController extends Controller
 
   public function addRoom()
   {
-    return view('Admin.__div_list.add_room');
+    $categories = Room_Category::all();
+    return view('Admin.__div_list.add_room', compact('categories'));
   }
 
   public function viewRoom()
   {
     $rooms = Room::all();
     return view('Admin.__div_list.view_room', compact('rooms'));
+  }
+
+  public function category()
+  {
+    $categories = Room_Category::all();
+    return view('Admin.__div_list.category', compact('categories'));
+  }
+
+  public function category_tb()
+  {
+    $categories = Room_Category::all();
+    return view('Admin.__sub.categorytable', compact('categories'));
+  }
+
+  public function facility()
+  {
+    $facilities = Facility::all();
+    return view('Admin.__div_list.facility', compact('facilities'));
+  }
+
+  public function facilitytable()
+  {
+    $facilities = Facility::all();
+    return view('Admin.__sub.facilitytable', compact('facilities'));
+  }
+
+  public function feature()
+  {
+    return view('Admin.__div_list.feature');
   }
 }

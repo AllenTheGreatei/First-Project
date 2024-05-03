@@ -14,6 +14,9 @@
             
             <li id="viewroom"class="li menubtn">View Room</li>
             <li id="addnewroom"class="li menubtn">Add New Room</li>
+            <li id="category"class="li menubtn">Room Category</li>
+            <li id="facility"class="li menubtn">Facility</li>
+            <li id="feature"class="li menubtn">Feature</li>
             <button id="bookedbtn"class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/agenda.png')}}" alt="">Booked</button>
             <button class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/history.png')}}" alt="">History</button>
             <button class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/settings.png')}}" alt="">Settings</button>
@@ -27,4 +30,9 @@
     var dashboardRoute = '{{ route("dashboardbtn") }}';
     var addroomRoute = '{{ route("add_room") }}';
     var viewroomRoute = '{{ route("view_room") }}';
+    var category = '{{ route("category") }}';
+    var facilityRoute = '{{ route("facility") }}';
+    var facilitytb = '{{ route("facilitytable") }}';
+    var feature = '{{ route("feature") }}';
+
 </script>

@@ -38,8 +38,19 @@ Route::get('/register', [UserAuthController::class, 'register'])->name('register
 Route::get('/login', [UserAuthController::class, 'index'])->name('login');
 
 // ADMIN
+Route::post('/retrive_room', [AdminRoomController::class, 'retrive_room'])->name('retrive_room');
 Route::post('/delete_room', [AdminRoomController::class, 'delete_room'])->name('delete_room');
 Route::post('/addNewRoom', [AdminRoomController::class, 'addNewRoom'])->name('addNewRoom');
+Route::post('/add_category', [AdminRoomController::class, 'add_category'])->name('add_category');
+Route::post('/delete_category', [AdminRoomController::class, 'delete_category'])->name('delete_category');
+Route::post('/show_category', [AdminRoomController::class, 'show_category'])->name('show_category');
+Route::post('/save_edited_category', [AdminRoomController::class, 'save_edited_category'])->name(
+  'save_edited_category'
+);
+Route::post('/add_facility', [AdminRoomController::class, 'add_facility'])->name('add_facility');
+Route::post('/delete_facility', [AdminRoomController::class, 'delete_facility'])->name('delete_facility');
+Route::post('/show_facility', [AdminRoomController::class, 'show_facility'])->name('show_facility');
+Route::post('/update_facility', [AdminRoomController::class, 'update_facility'])->name('update_facility');
 
 Route::post('/admin-google', [AdminAjaxController::class, 'google_handler'])->name('google');
 Route::post('/admin-ajax-login', [AdminAjaxController::class, 'index'])->name('admin-ajax-login');
@@ -54,6 +65,11 @@ Route::middleware(['admin'])->group(function () {
   Route::get('/dashboardbtn', [AdminNavigationController::class, 'dashboardbtn'])->name('dashboardbtn');
   Route::get('/add_room', [AdminNavigationController::class, 'addRoom'])->name('add_room');
   Route::get('/view_room', [AdminNavigationController::class, 'viewRoom'])->name('view_room');
+  Route::get('/category', [AdminNavigationController::class, 'category'])->name('category');
+  Route::get('/category_tb', [AdminNavigationController::class, 'category_tb'])->name('category_tb');
+  Route::get('/facility', [AdminNavigationController::class, 'facility'])->name('facility');
+  Route::get('/facilitytable', [AdminNavigationController::class, 'facilitytable'])->name('facilitytable');
+  Route::get('/feature', [AdminNavigationController::class, 'feature'])->name('feature');
 });
 
 // Ajax Route
