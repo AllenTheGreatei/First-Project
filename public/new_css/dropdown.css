@@ -1,0 +1,27 @@
+.dropdown-menu,
+.dropdown-item,
+.dropdown {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown input {
+  cursor: pointer;
+}
+
+.dropdown-item {
+  padding: 0.6em 1em;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #f4f4f4;
+  color: darkgrey;
+}
+
+.selected:hover {
+  background-color: #f4f4f4;
+  color: darkgrey;
+}

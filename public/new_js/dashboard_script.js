@@ -36,14 +36,27 @@ $(document).ready(function () {
   });
 
   $('.side-btn').click(function () {
-    $('.side-btn').each(function () {
-      $(this).removeClass('active');
-    });
-    $('.li').each(function () {
-      $(this).removeClass('active');
-    });
-    $(this).addClass('active');
-    $('.li').css('display', 'none');
+    if ($(this).attr('id') === 'roombtn') {
+      if ($('.li').css('display') === 'none') {
+        $('.li').css('display', 'block');
+        $('.side-btn').each(function () {
+          $(this).removeClass('active');
+        });
+        $(this).addClass('active');
+      } else {
+        $('.li').css('display', 'none');
+        $(this).removeClass('active');  
+      }
+    } else {
+      $('.side-btn').each(function () {
+        $(this).removeClass('active');
+      });
+      $('.li').each(function () {
+        $(this).removeClass('active');
+      });
+      $(this).addClass('active');
+      $('.li').css('display', 'none');
+    }
   });
 
   $('.li').click(function () {
@@ -57,9 +70,16 @@ $(document).ready(function () {
   });
 
   // $('.dashboard-container').load(viewroomRoute);
-  $('#roombtn').click(function () {
-    $('.li').css('display', 'block');
-  });
+  // $('#roombtn').click(function () {
+  //   $('.li').css('display', 'block');
+  // });
+  // $('#roombtn').on('click', function () {
+  //   if ($('.li').css('display', 'none')) {
+  //     $('.li').css('display', 'block');
+  //   } else {
+  //     $('.li').css('display', 'none');
+  //   }
+  // });
 
   $('#user_img').on('click', function () {
     $('.user_container').css('display', function (_, currentValue) {
@@ -71,6 +91,7 @@ $(document).ready(function () {
   });
   $('#addnewroom').click(function () {
     $('.dashboard-container').load(addroomRoute);
+
     $('#user_img').on('click', function () {
       $('.user_container').css('display', function (_, currentValue) {
         return currentValue === 'none' ? 'block' : 'none';

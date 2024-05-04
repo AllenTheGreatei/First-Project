@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Room;
 use App\Models\Room_Category;
 use App\Models\Facility;
+use App\Models\Feature;
 
 class AdminRoomController extends Controller
 {
@@ -60,6 +61,51 @@ class AdminRoomController extends Controller
     }
   }
 
+  public function submit_edit_room(Request $request)
+  {
+    $r_id = request('id');
+    $r_name = $request->input('r_name');
+    $r_price = $request->input('r_price');
+    $r_category = $request->input('r_category');
+    $r_facility = $request->input('r_facility');
+    $r_feature = $request->input('r_feature');
+    $r_adult = $request->input('r_adult');
+    $r_children = $request->input('r_children');
+    $r_description = $request->input('r_description');
+    $img = $request->file('image');
+    if ($img === null) {
+      $update_room = Room::where('id', $r_id)->update([
+        'room_name' => $r_name,
+        'price' => $r_price,
+        'room_category' => $r_category,
+        'room_features' => $r_feature,
+        'room_facilities' => $r_facility,
+        'adult' => $r_adult,
+        'children' => $r_children,
+        'description' => $r_description,
+      ]);
+
+      if ($update_room) {
+        return response()->json(['message' => 'success']);
+      } else {
+        return response()->json(['message' => 'failed']);
+      }
+    } else {
+      return response()->json(['message' => 's']);
+      // $validator = Validator::make($request->all(), [
+      //   'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+      // ]);
+
+      // if ($validator->fails()) {
+      //   return response()->json(['error' => 'notvalidimage']);
+      // }
+
+      // $extension = $img->getClientOriginalExtension();
+      // $imgname = time() . '.' . $extension;
+      // $path = $img->move(public_path('RoomImg'), $imgname);
+    }
+  }
+
   public function delete_room(Request $request)
   {
     $id = $request->room_id;
@@ -80,6 +126,7 @@ class AdminRoomController extends Controller
     $room = Room::where('id', $room_id)->first();
 
     $room_info = [
+      'r_id' => $room->id,
       'r_name' => $room->room_name,
       'r_price' => $room->price,
       'r_category' => $room->room_category,
@@ -190,6 +237,52 @@ class AdminRoomController extends Controller
     $name = $request->name;
     $facility = Facility::where('id', $id)->update(['name' => $name]);
     if ($facility) {
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function add_feature(Request $request)
+  {
+    $name = $request->name;
+    $new_feature = Feature::create(['name' => $name]);
+
+    if ($new_feature) {
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function dealte_feature()
+  {
+    $id = request('id');
+    $del = Feature::where('id', $id)->delete();
+    if ($del) {
+      return response()->json(['message' => 'success', 'id' => $id]);
+    } else {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function view_feature()
+  {
+    $id = request('id');
+    $view = Feature::where('id', $id)->first();
+    if ($view) {
+      return response()->json(['message' => 'success', 'feature' => $view]);
+    } else {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function update_feature(Request $request)
+  {
+    $id = $request->id;
+    $name = $request->name;
+    $feature = Feature::where('id', $id)->update(['name' => $name]);
+    if ($feature) {
       return response()->json(['message' => 'success']);
     } else {
       return response()->json(['message' => 'failed']);

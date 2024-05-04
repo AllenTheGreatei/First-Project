@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Room_Category;
 use App\Models\Facility;
+use App\Models\Feature;
 
 class AdminNavigationController extends Controller
 {
@@ -39,13 +40,24 @@ class AdminNavigationController extends Controller
   public function addRoom()
   {
     $categories = Room_Category::all();
-    return view('Admin.__div_list.add_room', compact('categories'));
+    $facilities = Facility::all();
+    $features = Feature::all();
+    return view('Admin.__div_list.add_room', compact('categories', 'facilities', 'features'));
   }
 
   public function viewRoom()
   {
     $rooms = Room::all();
-    return view('Admin.__div_list.view_room', compact('rooms'));
+    $facilities = Facility::all();
+    $features = Feature::all();
+    $categories = Room_Category::all();
+    return view('Admin.__div_list.view_room', compact('rooms', 'features', 'facilities', 'categories'));
+  }
+
+  public function roomtable()
+  {
+    $rooms = Room::all();
+    return view('Admin.__sub.room_table', compact('rooms'));
   }
 
   public function category()
@@ -74,6 +86,13 @@ class AdminNavigationController extends Controller
 
   public function feature()
   {
-    return view('Admin.__div_list.feature');
+    $features = Feature::all();
+    return view('Admin.__div_list.feature', compact('features'));
+  }
+
+  public function featuretable()
+  {
+    $features = Feature::all();
+    return view('Admin.__sub.feature', compact('features'));
   }
 }

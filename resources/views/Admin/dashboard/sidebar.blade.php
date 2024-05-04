@@ -34,5 +34,7 @@
     var facilityRoute = '{{ route("facility") }}';
     var facilitytb = '{{ route("facilitytable") }}';
     var feature = '{{ route("feature") }}';
+    var featuretable = '{{ route("featuretable") }}';
+    var roomtable = '{{ route("roomtable") }}';
 
 </script>

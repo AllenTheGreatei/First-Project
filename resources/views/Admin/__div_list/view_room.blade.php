@@ -1,7 +1,8 @@
 <link rel="stylesheet" href="{{asset('new_css/dashboard.css')}}">
+<link rel="stylesheet" href="{{asset('new_css/dropdown.css')}}">
 <div class="view_room">
     <div class="box">
-         {{-- Book Now Modal --}}
+         {{-- Edit Modal --}}
     <div class="modal fade" id="editroom" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg"role="document">
         <div class="modal-content"  >
@@ -9,7 +10,7 @@
             <h5 class="modal-title" id="exampleModalLongTitle">Edit Room Information</h5>
             </div>
             <div class="modal-body">
-                <form action="" class="edit-room-form">
+                <form id="edit-room-form">
                     <div class="row">
                         <div class="col px-5">
                             <div class="row">
@@ -21,51 +22,74 @@
                                     <input type="file" class="custom-file-input" id="uploadImg"  name="image">
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
-                                <input type="text" class="form-control" id="img" disabled>
+                                <input type="text" class="form-control input" name="hide" id="img" disabled>
                             </div>
                         </div>
                         <div class="col">
                             <div class="row mr-3 pb-1">
                                 <label for="" class="form-label">Room Name</label>
-                                <input type="text" class="form-control" id="r_name" name="r_name">
+                                <input type="text" class="form-control input" id="r_name" name="r_name">
                             </div>
                             <div class="row mr-3 pb-1">
                                 <label for="" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="r_price" name="r_price">
+                                <input type="number" class="form-control input" id="r_price" name="r_price">
                             </div>
                             <div class="row mr-3 pb-1">
                                 <label for="" class="form-label">Category</label>
-                                <select class="form-control" id="r_category" name="r_category" >
-                                    <option value="Delux">asd</option>
+                                <select class="form-control input" id="r_category" name="r_category" >
+                                    @if ($categories)
+                                        @foreach ($categories as $category)
+                                        <option value="{{$category->Name}}">{{ $category->Name}}</option>
+                                        @endforeach
+                                    @else
+                                    <li class="dropdown-item">No Available</li>
+                                    @endif
+                                    
                                     <option value="Delux">rtw</option>
                                 </select>
                             </div>
                             <div class="row mr-3 pb-1">
-                                <label for="" class="form-label">Features</label>
-                                {{-- <select class="form-control" id="r_features" name="r_feartures"> --}}
-                                    {{-- <option value="Delux">Balcony</option>
-                                    <option value="Delux">Kitchen</option> --}}
-                                {{-- </select> --}}
-                                <select class="form-select" multiple aria-label="Multiple select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                                <label for="" class="form-label">Facilities</label>
+
+                                <div class="dropdown" id="dropdown">
+                                    <input  class="form-control dropdown-toggle" type="text" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="r_facility">
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        @if ($facilities)
+                                            @foreach ($facilities as $facility)
+                                                <li class="dropdown-item">{{ $facility->name}}</li>
+                                            @endforeach
+                                        @else
+                                        <li class="dropdown-item">No Available</li>
+                                        @endif
+                                    </div>
+                                </div>
                                   
                             </div>
                             <div class="row mr-3 pb-1">
-                                <label for="" class="form-label">Facilities</label>
-                                <select class="form-control" id="r_facilities" name="r_facilities">
+                                <label for="" class="form-label">Features</label>
+
+                                <div class="dropdown" id="dropdown1">
+                                    <input  class="form-control dropdown-toggle" type="text" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="r_feature">
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        @if ($features)
+                                            @foreach ($features as $feature)
+                                                <li class="dropdown-item">{{ $feature->name}}</li>
+                                            @endforeach
+                                        @else
+                                        <li class="dropdown-item">No Available</li>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- <select class="form-control" id="r_facilities" name="r_facilities"> --}}
                                     {{-- <option value="Delux">Wifi</option>
                                     <option value="Delux">Bathtub</option> --}}
-                                </select>
+                                {{-- </select> --}}
                             </div>
-
                             <div class="row mr-3 pb-1">
                                 <div class="col ml-0 px-0 mr-2">
                                     <label for="" class="form-label">Adult</label>
-                                    <input type="number" name="r_adult" id="r_adult"class="form-control">
+                                    <input type="number" name="r_adult" id="r_adult"class="input form-control">
                                 </div>
                                 <div class="col mx-0 px-0">
                                     <label for="" class="form-label">Children</label>
@@ -73,10 +97,7 @@
                                 </div>
                                 
                             </div>
-
-                            
                         </div>
-                        
                     </div>
                     <div class="row ml-3 mr-3 pb-1">
                         <label for="" class="form-label">Description</label>
@@ -85,8 +106,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeeditr">Close</button>
+            <button type="button" class="btn btn-primary" id="save_edited_room">Save changes</button>
             </div>
         </div>
         </div>
@@ -103,7 +124,7 @@
                     <th>ACTION</th>
                 </tr>
             </thead>
-            <tbody id ="table_body">
+            <tbody id ="table_body" class="room_tbody">
                 @if ($rooms)
                     @php
                         $no=1;
@@ -120,7 +141,8 @@
                             @else
                             <td style="color:rgb(243, 34, 34)">{{ $room->status}}</td>
                             @endif
-                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ $room->id }}">EDIT</button><button class ="delete-room-btn" value="{{ $room->id }}">DELETE</button></td>
+                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ $room->id }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button><button class ="delete-room-btn" value="{{ $room->id }}">
+                                <i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach
                 @else
@@ -135,3 +157,76 @@
 </div>
 <script src="{{asset('new_js/roomCrud.js')}}"></script>
 <script src="{{asset('new_js/content.js')}}"></script>
+<script>
+    $(document).ready(function(){
+        $('#dropdown .dropdown-menu').on('click','.dropdown-item',function(e){
+            e.stopPropagation();
+            let text = $(this).html();
+            
+            let strippedText = text.replace("✔️ ", "");
+
+            let currentValue = $('#dropdownMenuButton').val();
+            if (!currentValue.includes(strippedText)) {
+                $(this).addClass('selected').html("✔️ " + text);
+                if(!currentValue){
+                    $('#dropdownMenuButton').val(text)
+                }else{
+                    $('#dropdownMenuButton').val(currentValue +", "+ text);
+                }
+            }
+        });
+
+        $('#dropdown .dropdown-menu').on('click', '.selected', function () {
+            let text = $(this).html();
+            let strippedText = text.replace("✔️ ", "");
+            $(this).removeClass('selected').html(strippedText);
+            let currentValue = $('#dropdownMenuButton').val();
+
+            if (currentValue.includes(', '+strippedText)) {
+                let updatedValue = currentValue.replace(', '+strippedText, "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton').val(updatedValue);
+            }else if(currentValue.includes(strippedText+', ')|| currentValue.includes(strippedText+',')){
+                let updatedValue = currentValue.replace(strippedText+', ', "").replace(strippedText+',', "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton').val(updatedValue);
+            }else if(!currentValue.includes(',')){
+                let updatedValue = currentValue.replace(strippedText, "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton').val(updatedValue);
+            }
+        });
+
+        $('#dropdown1 .dropdown-menu').on('click','.dropdown-item',function(e){
+            e.stopPropagation();
+            let text = $(this).html();
+            
+            let strippedText = text.replace("✔️ ", "");
+
+            let currentValue = $('#dropdownMenuButton1').val();
+            if (!currentValue.includes(strippedText)) {
+                $(this).addClass('selected').html("✔️ " + text);
+                if(!currentValue){
+                    $('#dropdownMenuButton1').val(text)
+                }else{
+                    $('#dropdownMenuButton1').val(currentValue +", "+ text);
+                }
+            }
+        });
+
+        $('#dropdown1 .dropdown-menu').on('click', '.selected', function () {
+            let text = $(this).html();
+            let strippedText = text.replace("✔️ ", "");
+            $(this).removeClass('selected').html(strippedText);
+            let currentValue = $('#dropdownMenuButton1').val();
+
+            if (currentValue.includes(', '+strippedText)) {
+                let updatedValue = currentValue.replace(', '+strippedText, "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton1').val(updatedValue);
+            }else if(currentValue.includes(strippedText+', ')|| currentValue.includes(strippedText+',')){
+                let updatedValue = currentValue.replace(strippedText+', ', "").replace(strippedText+',', "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton1').val(updatedValue);
+            }else if(!currentValue.includes(',')){
+                let updatedValue = currentValue.replace(strippedText, "").replace(", ,", ", ").trim();
+                $('#dropdownMenuButton1').val(updatedValue);
+            }
+        });
+    });
+</script>

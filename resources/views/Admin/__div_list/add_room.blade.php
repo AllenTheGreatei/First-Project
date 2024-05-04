@@ -26,8 +26,13 @@
                 <div class="rows">
                     <label for="roomName">Features<span style="color:red"> *</span></label>
                     <select class=""name="features" id="features">
-                        <option value="Balcony">Balcony</option>
-                        <option value="Kitchen">Kitchen</option>
+                        @if ($features)
+                            @foreach ($features as $feature)
+                                <option value="{{ $feature->name }}">{{ $feature->name }}</option>
+                            @endforeach
+                        @else
+                            <option">No Available feature</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -35,8 +40,13 @@
                 <div class="rows">
                     <label for="roomName">Facilities<span style="color:red"> *</span></label>
                     <select class=""name="facilities" id="facilities">
-                        <option value="Air conditioner">Air conditioner</option>
-                        <option value="Wifi">Wifi</option>
+                        @if ($facilities)
+                            @foreach ($facilities as $facility)
+                                <option value="{{ $facility->name }}">{{ $facility->name }}</option>
+                            @endforeach
+                        @else
+                            <option">No Available facility</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -59,7 +69,7 @@
             <select class="form-control" name="category" id="category">
                 @if ($categories)
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->Name }}</option>
+                        <option value="{{ $category->Name }}">{{ $category->Name }}</option>
                     @endforeach
                 @else
                     <option">No Available category</option>

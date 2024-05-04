@@ -1,5 +1,4 @@
 // const { error } = require('jquery');
-
 $(document).ready(function () {
   function warning_msg(msg) {
     const Toast = Swal.mixin({
@@ -91,6 +90,7 @@ $(document).ready(function () {
       }
     });
   });
+
   $('.update-room-btn').on('click', function () {
     $('option[data-dynamic="true"]').remove();
     let room_id = $(this).val();
@@ -125,33 +125,39 @@ $(document).ready(function () {
           $('#r_category').append(category);
           category.prop('selected', true);
 
-          let facility = $('<option>', {
-            value: data.room.r_facilities,
-            text: data.room.r_facilities,
-            'data-dynamic': 'true'
+          let R = data.room.r_facilities;
+          let newtext = '';
+          $.each(R.split(','), function (i, e) {
+            console.log(e);
+            let existingItem = $('#dropdown .dropdown-menu').find('.dropdown-item:contains("' + e.trim() + '")');
+            if (existingItem.length === 0) {
+              $('#dropdown .dropdown-menu').append('<li class="selected dropdown-item">✔️ ' + e.trim() + '</li>');
+            } else {
+              existingItem.addClass('selected');
+              existingItem.html('✔️ ' + e.trim());
+            }
+            newtext += e.trim() + ', ';
           });
+          $('#dropdownMenuButton').val(newtext);
 
-          // let R = data.room.r_facilities;
-          // let R_rey = R.split(',');
-          // R_rey.forEach(function (value) {
-          //   //
-          // });
-
-          $('#r_facilities').append(facility);
-          facility.prop('selected', true);
-
-          let feature = $('<option>', {
-            value: data.room.r_features,
-            text: data.room.r_features,
-            'data-dynamic': 'true'
+          let features = data.room.r_features;
+          let newtext1 = '';
+          $.each(features.split(','), function (i, e) {
+            let trimmedValue = e.trim();
+            let existingItem = $('#dropdown1').find('.dropdown-item:contains("' + trimmedValue + '")');
+            if (existingItem.length === 0) {
+              $('#dropdown1 .dropdown-menu').append('<li class="selected dropdown-item">✔️ ' + trimmedValue + '</li>');
+            } else {
+              existingItem.addClass('selected').html('✔️ ' + trimmedValue);
+            }
+            newtext1 += e.trim() + ', ';
           });
-
-          $('#r_features').append(feature);
-          feature.prop('selected', true);
+          $('#dropdownMenuButton1').val(newtext1);
 
           $('#r_adult').val(data.room.r_adult);
           $('#r_children').val(data.room.r_children);
           $('#r_description').val(data.room.r_description);
+          $('#save_edited_room').val(data.room.r_id);
           $('#room-image').attr('src', '/RoomImg/' + data.room.r_img);
         }
       },
@@ -159,6 +165,58 @@ $(document).ready(function () {
         console.log(xhr.responseText);
       }
     });
+  });
+
+  $('#save_edited_room').on('click', function () {
+    let id = $(this).val();
+    let notNull = true;
+    $('#edit-room-form')
+      .find('.input')
+      .each(function () {
+        if (!$(this).val()) {
+          warning_msg('Please Fill all Fields.');
+          notNull = false;
+          return false;
+        }
+      });
+    if (notNull) {
+      let editroomform = new FormData($('#edit-room-form')[0]);
+      editroomform.append('id', id);
+      $.ajax({
+        url: 'submit_edit_room',
+        method: 'POST',
+        data: editroomform,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        cache: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          $('#save_edited_room').prop('disabled', true);
+          $('#save_edited_room').html('Saving...');
+        },
+        success: function (data) {
+          if (data.message == 'success') {
+            success_msg('Room Updated Successfully.');
+            // $('.room_tbody').load(roomtable);
+            $('#closeeditr').click();
+          } else {
+            console.log(data);
+            error_msg('Failed to update.');
+          }
+          $('#save_edited_room').prop('disabled', false);
+          $('#save_edited_room').html('Save Changes');
+        },
+        error: function (xhr, status, error) {
+          console.log(xhr.responseText);
+          error_msg('Opps! Something went wrong.');
+          $('#addBtn').prop('disabled', false);
+          $('#addBtn').html('Add New Room');
+        }
+      });
+    }
   });
 
   $('#save_category').on('click', function () {
@@ -427,6 +485,141 @@ $(document).ready(function () {
         }
         $('#save_edit_facility').prop('disabled', false);
         $('#save_edit_facility').html('Save');
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+
+  $('#save_feature').on('click', function () {
+    let name = $('#feature_name').val();
+
+    $.ajax({
+      url: 'add_feature',
+      method: 'POST',
+      data: { name },
+      dataType: 'json',
+      cache: false,
+      headers: {
+        X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('#save_feature').prop('disabled', true);
+        $('#save_feature').html('Saving...');
+      },
+      success: function (data) {
+        if (data.message == 'success') {
+          success_msg('New Feature Added Successfully.');
+          $('#fclose').click();
+          $('.tb_feature').load(featuretable);
+          $('#feature_name').val('');
+        } else {
+          error_msg('Opps! Something went wrong.');
+          console.log(data);
+        }
+        $('#save_feature').prop('disabled', false);
+        $('#save_feature').html('Save');
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+
+  $('.tb_feature').on('click', '.delete-feature-btn', function () {
+    let id = $(this).val();
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Delete!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: 'dealte_feature',
+          method: 'POST',
+          data: { id },
+          dataType: 'json',
+          cahce: false,
+          headers: {
+            X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function (data) {
+            if (data.message == 'success') {
+              success_msg('Feature Deleted Successfully.');
+              $('.row' + data.id).hide();
+            } else {
+              error_msg('Failed to delete.');
+              console.log(data);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+          }
+        });
+      }
+    });
+  });
+
+  $('.tb_feature').on('click', '.update-feature-btn', function () {
+    let id = $(this).val();
+    $.ajax({
+      url: 'view_feature',
+      method: 'POST',
+      data: { id },
+      dataType: 'json',
+      cahce: false,
+      headers: {
+        X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function (data) {
+        if (data.message == 'success') {
+          $('#edit_feature_name').val(data.feature.name);
+          $('#id_hidden').val(data.feature.id);
+        } else {
+          error_msg('Something went wrong.');
+          console.log(data);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+
+  $('#save_edit_feature').on('click', function () {
+    let name = $('#edit_feature_name').val();
+    let id = $('#id_hidden').val();
+    $.ajax({
+      url: 'update_feature',
+      method: 'POST',
+      data: {
+        name: name,
+        id: id
+      },
+      dataType: 'json',
+      cache: false,
+      headers: {
+        X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('#save_edit_feature').prop('disabled', true);
+        $('#save_edit_feature').html('Saving...');
+      },
+      success: function (data) {
+        if (data.message == 'success') {
+          success_msg('Feature Updated Successfully.');
+          $('#fetclose').click();
+          $('.tb_feature').load(featuretable);
+        } else {
+          error_msg('Opps! Something went wrong.');
+          console.log(data);
+        }
+        $('#save_edit_feature').prop('disabled', false);
+        $('#save_edit_feature').html('Save');
       },
       error: function (xhr, status, error) {
         console.log(xhr.responseText);

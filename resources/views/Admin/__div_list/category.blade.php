@@ -66,8 +66,8 @@
                         <tr class="row{{$category->id}}">
                             <td>{{ $no++ }}</td>
                             <td>{{ $category->Name}}</td>
-                            <td><button class ="update-category-btn" data-toggle="modal" data-target="#update_category" value="{{ $category->id}}">EDIT</button>
-                                <button class ="delete-category-btn" value="{{ $category->id}}">DELETE</button></td>
+                            <td><button class ="update-category-btn" data-toggle="modal" data-target="#update_category" value="{{ $category->id}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
+                                <button class ="delete-category-btn" value="{{ $category->id}}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach
                     <button id="num" value="{{ $no }}" hidden></button>
