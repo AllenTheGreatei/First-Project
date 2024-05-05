@@ -45,7 +45,7 @@ $(document).ready(function () {
         $(this).addClass('active');
       } else {
         $('.li').css('display', 'none');
-        $(this).removeClass('active');  
+        $(this).removeClass('active');
       }
     } else {
       $('.side-btn').each(function () {
@@ -117,4 +117,5 @@ $(document).ready(function () {
   $('#feature').on('click', function () {
     $('.dashboard-container').load(feature);
   });
+  $('.dashboard-container').load(admin_profile);
 });

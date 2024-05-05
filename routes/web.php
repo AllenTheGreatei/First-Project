@@ -81,4 +81,7 @@ Route::middleware(['admin'])->group(function () {
   Route::get('/featuretable', [AdminNavigationController::class, 'featuretable'])->name('featuretable');
 });
 
+Route::get('/admin_profile', function () {
+  return view('Admin.Auth.admin_profile');
+})->name('admin_profile');
 // Ajax Route

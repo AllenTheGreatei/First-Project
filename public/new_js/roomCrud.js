@@ -125,32 +125,64 @@ $(document).ready(function () {
           $('#r_category').append(category);
           category.prop('selected', true);
 
-          let R = data.room.r_facilities;
-          let newtext = '';
-          $.each(R.split(','), function (i, e) {
-            console.log(e);
-            let existingItem = $('#dropdown .dropdown-menu').find('.dropdown-item:contains("' + e.trim() + '")');
-            if (existingItem.length === 0) {
-              $('#dropdown .dropdown-menu').append('<li class="selected dropdown-item">✔️ ' + e.trim() + '</li>');
-            } else {
-              existingItem.addClass('selected');
-              existingItem.html('✔️ ' + e.trim());
+          function cleanArray(arr) {
+            var cleanedArr = [];
+            for (var i = 0; i < arr.length; i++) {
+              if (arr[i] !== ',') {
+                cleanedArr.push(arr[i]);
+              } else if (i < arr.length - 1 && arr[i + 1] !== ',') {
+                cleanedArr.push(arr[i]);
+              }
             }
-            newtext += e.trim() + ', ';
+            // If the last element is a comma and there's no text after it, remove it
+            if (cleanedArr.length > 0 && cleanedArr[cleanedArr.length - 1] === ',') {
+              cleanedArr.pop();
+            }
+            return cleanedArr;
+          }
+          $('#dropdownMenuButton').val('');
+          let R = data.room.r_facilities;
+          let clean = R.split(',');
+          let next = cleanArray(clean);
+          let newtext = '';
+          $('.dropdown-item').removeClass('selected');
+          $('.check').css('display', 'none');
+          let checkifnull = false;
+          $.each(next, function (i, e) {
+            let existingItem = $('#dropdown-menu').find('.dropdown-item:contains("' + e.trim() + '")');
+            if (existingItem.length !== 0) {
+              existingItem.addClass('selected');
+              existingItem.find('.check').css('display', 'block');
+            }
+
+            if (!$('#dropdownMenuButton').val() && !checkifnull) {
+              checkifnull = true;
+              newtext += e.trim();
+            } else {
+              newtext = newtext + ', ' + e.trim();
+            }
           });
           $('#dropdownMenuButton').val(newtext);
 
+          $('#dropdownMenuButton1').val('');
           let features = data.room.r_features;
+          let clean2 = features.split(',');
+          let next2 = cleanArray(clean2);
           let newtext1 = '';
-          $.each(features.split(','), function (i, e) {
+          let checkifnull1 = false;
+          $.each(next2, function (i, e) {
             let trimmedValue = e.trim();
             let existingItem = $('#dropdown1').find('.dropdown-item:contains("' + trimmedValue + '")');
-            if (existingItem.length === 0) {
-              $('#dropdown1 .dropdown-menu').append('<li class="selected dropdown-item">✔️ ' + trimmedValue + '</li>');
-            } else {
-              existingItem.addClass('selected').html('✔️ ' + trimmedValue);
+            if (existingItem.length !== 0) {
+              existingItem.addClass('selected');
+              existingItem.find('.check').css('display', 'block');
             }
-            newtext1 += e.trim() + ', ';
+            if (!$('#dropdownMenuButton1').val() && !checkifnull1) {
+              newtext1 = e.trim();
+              checkifnull1 = true;
+            } else {
+              newtext1 = newtext1 + ', ' + e.trim();
+            }
           });
           $('#dropdownMenuButton1').val(newtext1);
 
@@ -212,8 +244,8 @@ $(document).ready(function () {
         error: function (xhr, status, error) {
           console.log(xhr.responseText);
           error_msg('Opps! Something went wrong.');
-          $('#addBtn').prop('disabled', false);
-          $('#addBtn').html('Add New Room');
+          $('#save_edited_room').prop('disabled', false);
+          $('#save_edited_room').html('Save Changes');
         }
       });
     }

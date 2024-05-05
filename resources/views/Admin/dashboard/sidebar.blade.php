@@ -36,5 +36,6 @@
     var feature = '{{ route("feature") }}';
     var featuretable = '{{ route("featuretable") }}';
     var roomtable = '{{ route("roomtable") }}';
+    var admin_profile = '{{ route("admin_profile")}}';
 
 </script>

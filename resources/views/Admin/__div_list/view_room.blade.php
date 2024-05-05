@@ -44,8 +44,6 @@
                                     @else
                                     <li class="dropdown-item">No Available</li>
                                     @endif
-                                    
-                                    <option value="Delux">rtw</option>
                                 </select>
                             </div>
                             <div class="row mr-3 pb-1">
@@ -53,10 +51,10 @@
 
                                 <div class="dropdown" id="dropdown">
                                     <input  class="form-control dropdown-toggle" type="text" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" name="r_facility">
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div class="dropdown-menu" id="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         @if ($facilities)
                                             @foreach ($facilities as $facility)
-                                                <li class="dropdown-item">{{ $facility->name}}</li>
+                                            <li class="dropdown-item"><span class="check">✔️ </span>{{ $facility->name}}</li>
                                             @endforeach
                                         @else
                                         <li class="dropdown-item">No Available</li>
@@ -73,7 +71,7 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         @if ($features)
                                             @foreach ($features as $feature)
-                                                <li class="dropdown-item">{{ $feature->name}}</li>
+                                                <li class="dropdown-item"><span class="check">✔️ </span>{{ $feature->name}}</li>
                                             @endforeach
                                         @else
                                         <li class="dropdown-item">No Available</li>
@@ -141,7 +139,7 @@
                             @else
                             <td style="color:rgb(243, 34, 34)">{{ $room->status}}</td>
                             @endif
-                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ $room->id }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button><button class ="delete-room-btn" value="{{ $room->id }}">
+                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ $room->id }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button></button><button class ="delete-room-btn" value="{{ $room->id }}">
                                 <i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach
@@ -161,48 +159,71 @@
     $(document).ready(function(){
         $('#dropdown .dropdown-menu').on('click','.dropdown-item',function(e){
             e.stopPropagation();
-            let text = $(this).html();
-            
-            let strippedText = text.replace("✔️ ", "");
+            let text = $(this)
+                    .contents() // Get all child nodes, including text nodes and elements
+                    .filter(function() {
+                        // Filter out any elements with class "check"
+                        return this.nodeType === 3 || !$(this).hasClass('check');
+                    })
+                    .text() // Get the text content
+                    .trim(); // Trim leading and trailing whitespace
+                            
+            // let strippedText = text.replace("✔️ ", "");
 
             let currentValue = $('#dropdownMenuButton').val();
-            if (!currentValue.includes(strippedText)) {
-                $(this).addClass('selected').html("✔️ " + text);
+            if (!currentValue.includes(text)) {
+                $(this).addClass('selected');
+                $(this).find('.check').css('display', 'block');
                 if(!currentValue){
                     $('#dropdownMenuButton').val(text)
                 }else{
-                    $('#dropdownMenuButton').val(currentValue +", "+ text);
+                    $('#dropdownMenuButton').val(currentValue +", "+ text.trim());
                 }
             }
         });
 
         $('#dropdown .dropdown-menu').on('click', '.selected', function () {
-            let text = $(this).html();
-            let strippedText = text.replace("✔️ ", "");
-            $(this).removeClass('selected').html(strippedText);
+            let text = $(this)
+                    .contents() // Get all child nodes, including text nodes and elements
+                    .filter(function() {
+                        // Filter out any elements with class "check"
+                        return this.nodeType === 3 || !$(this).hasClass('check');
+                    })
+                    .text() // Get the text content
+                    .trim(); // Trim leading and trailing whitespace
+            // let strippedText = text.replace("✔️ ", "");
+
+            $(this).removeClass('selected');
+            $(this).find('.check').css('display', 'none');
             let currentValue = $('#dropdownMenuButton').val();
 
-            if (currentValue.includes(', '+strippedText)) {
-                let updatedValue = currentValue.replace(', '+strippedText, "").replace(", ,", ", ").trim();
+            if (currentValue.includes(', '+text)) {
+                let updatedValue = currentValue.replace(', '+text, "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton').val(updatedValue);
-            }else if(currentValue.includes(strippedText+', ')|| currentValue.includes(strippedText+',')){
-                let updatedValue = currentValue.replace(strippedText+', ', "").replace(strippedText+',', "").replace(", ,", ", ").trim();
+            }else if(currentValue.includes(text+', ')|| currentValue.includes(text+',')){
+                let updatedValue = currentValue.replace(text+', ', "").replace(text+',', "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton').val(updatedValue);
             }else if(!currentValue.includes(',')){
-                let updatedValue = currentValue.replace(strippedText, "").replace(", ,", ", ").trim();
+                let updatedValue = currentValue.replace(text, "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton').val(updatedValue);
             }
         });
 
         $('#dropdown1 .dropdown-menu').on('click','.dropdown-item',function(e){
             e.stopPropagation();
-            let text = $(this).html();
-            
-            let strippedText = text.replace("✔️ ", "");
+             let text = $(this)
+                    .contents() // Get all child nodes, including text nodes and elements
+                    .filter(function() {
+                        // Filter out any elements with class "check"
+                        return this.nodeType === 3 || !$(this).hasClass('check');
+                    })
+                    .text() // Get the text content
+                    .trim(); // Trim leading and trailing whitespace
 
             let currentValue = $('#dropdownMenuButton1').val();
-            if (!currentValue.includes(strippedText)) {
-                $(this).addClass('selected').html("✔️ " + text);
+            if (!currentValue.includes(text)) {
+                $(this).addClass('selected');
+                $(this).find('.check').css('display', 'block');
                 if(!currentValue){
                     $('#dropdownMenuButton1').val(text)
                 }else{
@@ -212,19 +233,26 @@
         });
 
         $('#dropdown1 .dropdown-menu').on('click', '.selected', function () {
-            let text = $(this).html();
-            let strippedText = text.replace("✔️ ", "");
-            $(this).removeClass('selected').html(strippedText);
+            let text = $(this)
+                    .contents() // Get all child nodes, including text nodes and elements
+                    .filter(function() {
+                        // Filter out any elements with class "check"
+                        return this.nodeType === 3 || !$(this).hasClass('check');
+                    })
+                    .text() // Get the text content
+                    .trim(); // Trim leading and trailing whitespace
+            $(this).removeClass('selected');
+            $(this).find('.check').css('display', 'none');
             let currentValue = $('#dropdownMenuButton1').val();
 
-            if (currentValue.includes(', '+strippedText)) {
-                let updatedValue = currentValue.replace(', '+strippedText, "").replace(", ,", ", ").trim();
+            if (currentValue.includes(', '+text)) {
+                let updatedValue = currentValue.replace(', '+text, "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton1').val(updatedValue);
-            }else if(currentValue.includes(strippedText+', ')|| currentValue.includes(strippedText+',')){
-                let updatedValue = currentValue.replace(strippedText+', ', "").replace(strippedText+',', "").replace(", ,", ", ").trim();
+            }else if(currentValue.includes(text+', ')|| currentValue.includes(text+',')){
+                let updatedValue = currentValue.replace(text+', ', "").replace(text+',', "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton1').val(updatedValue);
             }else if(!currentValue.includes(',')){
-                let updatedValue = currentValue.replace(strippedText, "").replace(", ,", ", ").trim();
+                let updatedValue = currentValue.replace(text, "").replace(", ,", ", ").trim();
                 $('#dropdownMenuButton1').val(updatedValue);
             }
         });
