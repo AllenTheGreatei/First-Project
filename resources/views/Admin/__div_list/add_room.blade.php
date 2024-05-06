@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css">
 <div class="div add">
-    <h5>ADD NEW ROOM</h5>
+    <h4>ADD NEW ROOM</h4>
     <div class="wrap">
         <label for="" style="color:red">* Indicates required fields</label>
     <form id="addRoomForm" method="POST" enctype="multipart/form-data">
@@ -94,11 +94,12 @@
         <div class="rows">
             <button type="submit"class="btn btn-primary" id="addBtn">Add New Room</button>
         </div>
+        
     </form>
     </div>
 </div>
 {{-- <script src="{{asset('new_js/content.js')}}"></script> --}}
-<script src="{{asset('new_js/dashboard_script.js')}}"></script>
+{{-- <script src="{{asset('new_js/dashboard_script.js')}}"></script> --}}
 {{-- @extends('__partials.footer') --}}
 <script>
     $('.browse').click(function () {

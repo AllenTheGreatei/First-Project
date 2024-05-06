@@ -1,3 +1,65 @@
+function warning_msg(msg) {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-right',
+    iconColor: 'white',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true
+  });
+  Toast.fire({
+    icon: 'warning',
+    title: msg
+  });
+}
+function success_msg(msg) {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-right',
+    iconColor: 'white',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true
+  });
+  Toast.fire({
+    icon: 'success',
+    title: msg
+  });
+}
+function error_msg(msg) {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-right',
+    iconColor: 'white',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true
+  });
+  Toast.fire({
+    icon: 'error',
+    title: msg
+  });
+}
+$('#admin_save_info').on('click', function (e) {
+  e.preventDefault();
+
+  let username = $('#admin_username').val();
+  let fname = $('#admin_fname').val();
+  let lname = $('#admin_lname').val();
+  let email = $('#admin_email').val();
+
+  if (!username || !fname || !lname || !email) {
+  }
+});
 $(document).ready(function () {
   var activeBtnIndex = localStorage.getItem('activeBtnIndex');
   if (activeBtnIndex !== null) {

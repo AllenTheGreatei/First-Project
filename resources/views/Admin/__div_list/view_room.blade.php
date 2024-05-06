@@ -110,6 +110,10 @@
         </div>
         </div>
     </div>
+
+    <div class="header">
+        <h4>Room List</h4>
+    </div>
     {{-- Table --}}
         <table class = "user-list-table">
             <thead>
@@ -139,7 +143,7 @@
                             @else
                             <td style="color:rgb(243, 34, 34)">{{ $room->status}}</td>
                             @endif
-                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ $room->id }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button></button><button class ="delete-room-btn" value="{{ $room->id }}">
+                            <td><button class ="update-room-btn" data-toggle="modal" data-target="#editroom" value="{{ Crypt::encryptstring($room->id) }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button></button><button class ="delete-room-btn" value="{{ Crypt::encryptstring($room->id) }}">
                                 <i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach

@@ -36,8 +36,14 @@ Route::post('/logout_ajax', [UserAjaxActionController::class, 'logout_ajax'])->n
 Route::get('/register', [UserAuthController::class, 'register'])->name('register');
 // Route::get('/register2', [UserAuthController::class, 'register2'])->name('register2');
 Route::get('/login', [UserAuthController::class, 'index'])->name('login');
+Route::get('forgot-password', function () {
+  return view('User.Auth.auth-forgot-password-basic');
+})->name('forgot-password');
 
 // ADMIN
+Route::post('/update_admin_prof', [AdminAjaxController::class, 'update_admin_prof'])->name('update_admin_prof');
+Route::post('/change_pass', [AdminAjaxController::class, 'change_pass'])->name('change_pass');
+
 Route::post('/retrive_room', [AdminRoomController::class, 'retrive_room'])->name('retrive_room');
 Route::post('/delete_room', [AdminRoomController::class, 'delete_room'])->name('delete_room');
 Route::post('/addNewRoom', [AdminRoomController::class, 'addNewRoom'])->name('addNewRoom');
@@ -79,9 +85,10 @@ Route::middleware(['admin'])->group(function () {
   Route::get('/facilitytable', [AdminNavigationController::class, 'facilitytable'])->name('facilitytable');
   Route::get('/feature', [AdminNavigationController::class, 'feature'])->name('feature');
   Route::get('/featuretable', [AdminNavigationController::class, 'featuretable'])->name('featuretable');
+  Route::get('/admin_profile', [AdminNavigationController::class, 'admin_profile'])->name('admin_profile');
 });
 
-Route::get('/admin_profile', function () {
-  return view('Admin.Auth.admin_profile');
-})->name('admin_profile');
+// Route::get('/admin_profile', function () {
+//   return view('Admin.Auth.admin_profile');
+// })->name('admin_profile');
 // Ajax Route

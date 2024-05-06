@@ -36,7 +36,7 @@ class AdminAjaxController extends Controller
         if ($admin->email_verified_at) {
           Auth::guard('admin')->login($admin);
 
-          session(['adminName' => $admin->first_name . ' ' . $admin->last_name]);
+          session(['adminName' => $admin->first_name . ' ' . $admin->last_name, 'adminId' => $admin->id]);
           RateLimiter::clear($this->throttleKey());
           return response()->json(['message' => 'success']);
         } else {
@@ -71,7 +71,7 @@ class AdminAjaxController extends Controller
     if ($user->email_verified_at) {
       if ($user) {
         Auth::guard('admin')->login($user);
-        session(['adminName' => $user->first_name . ' ' . $user->last_name]);
+        session(['adminName' => $user->first_name . ' ' . $user->last_name, 'adminId' => $user->id]);
         return response()->json(['message' => 'success']);
       } else {
         return response()->json(['message' => 'errror']);
@@ -91,5 +91,52 @@ class AdminAjaxController extends Controller
       ->session()
       ->regenerateToken();
     return response()->json(['message' => 'success']);
+  }
+
+  public function update_admin_prof(Request $request)
+  {
+    $id = session('adminId');
+    $username = $request->admin_username;
+    $first_name = $request->admin_fname;
+    $last_name = $request->admin_lname;
+    $email = $request->admin_email;
+
+    $new_admin = Admin::where('id', $id)->update([
+      'first_name' => $first_name,
+      'last_name' => $last_name,
+      'username' => $username,
+      'email' => $email,
+    ]);
+
+    if ($new_admin) {
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function change_pass(Request $request)
+  {
+    $id = session('adminId');
+
+    $admin = Admin::where('id', $id)->first();
+
+    $old_pass = $admin->password;
+    $input_old_pass = $request->admin_oldpass;
+    $new_pass = $request->admin_new_pass;
+    $retype = $request->admin_retypepass;
+
+    if (!Hash::check($input_old_pass, $old_pass)) {
+      return response()->json(['message' => 'inavlid_old_pass']);
+    } else {
+      if ($new_pass != $retype) {
+        return response()->json(['message' => 'passnot_the_same']);
+      } else {
+        $update_pass = Admin::where('id', $id)->update([
+          'password' => bcrypt($new_pass),
+        ]);
+        return response()->json(['message' => 'success']);
+      }
+    }
   }
 }

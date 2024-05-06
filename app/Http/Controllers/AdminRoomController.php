@@ -8,6 +8,9 @@ use App\Models\Room;
 use App\Models\Room_Category;
 use App\Models\Facility;
 use App\Models\Feature;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\File;
 
 class AdminRoomController extends Controller
 {
@@ -91,29 +94,53 @@ class AdminRoomController extends Controller
         return response()->json(['message' => 'failed']);
       }
     } else {
-      return response()->json(['message' => 's']);
-      // $validator = Validator::make($request->all(), [
-      //   'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-      // ]);
+      $get_img = Room::where('id', $r_id)->first();
+      $old_img = $get_img->image;
+      $name = pathinfo($old_img, PATHINFO_FILENAME);
+      File::delete($name);
+      $validator = Validator::make($request->all(), [
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+      ]);
 
-      // if ($validator->fails()) {
-      //   return response()->json(['error' => 'notvalidimage']);
-      // }
+      if ($validator->fails()) {
+        return response()->json(['error' => 'notvalidimage']);
+      }
 
-      // $extension = $img->getClientOriginalExtension();
-      // $imgname = time() . '.' . $extension;
-      // $path = $img->move(public_path('RoomImg'), $imgname);
+      $extension = $img->getClientOriginalExtension();
+      $imgname = $name . '.' . $extension;
+      $path = $img->move(public_path('RoomImg'), $imgname);
+      $update_room = Room::where('id', $r_id)->update([
+        'room_name' => $r_name,
+        'price' => $r_price,
+        'room_category' => $r_category,
+        'room_features' => $r_feature,
+        'room_facilities' => $r_facility,
+        'adult' => $r_adult,
+        'children' => $r_children,
+        'description' => $r_description,
+        'image' => $imgname,
+      ]);
+
+      if ($update_room) {
+        return response()->json(['message' => 'success']);
+      } else {
+        return response()->json(['message' => 'failed']);
+      }
     }
   }
 
   public function delete_room(Request $request)
   {
-    $id = $request->room_id;
+    try {
+      $id = Crypt::decryptstring($request->room_id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
 
     $deleted = Room::where('id', $id)->delete();
 
     if ($deleted) {
-      return response()->json(['message' => 'success']);
+      return response()->json(['message' => 'success', 'id' => $id]);
     } else {
       return response()->json(['message' => 'error']);
     }
@@ -121,7 +148,11 @@ class AdminRoomController extends Controller
 
   public function retrive_room(Request $request)
   {
-    $room_id = $request->room_id;
+    try {
+      $room_id = Crypt::decryptstring($request->room_id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
 
     $room = Room::where('id', $room_id)->first();
 
@@ -161,7 +192,12 @@ class AdminRoomController extends Controller
 
   public function delete_category(Request $request)
   {
-    $id = $request->id;
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+
     $delete = Room_Category::where('id', $id)->delete();
     if ($delete) {
       return response()->json(['message' => 'success', 'id' => $id]);
@@ -172,7 +208,12 @@ class AdminRoomController extends Controller
 
   public function show_category(Request $request)
   {
-    $id = $request->id;
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+
     $find = Room_Category::where('id', $id)->first();
     if ($find) {
       return response()->json(['message' => 'success', 'category' => $find]);
@@ -211,7 +252,12 @@ class AdminRoomController extends Controller
 
   public function delete_facility(Request $request)
   {
-    $id = $request->id;
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+
     $delete_facility = Facility::where('id', $id)->delete();
     if ($delete_facility) {
       return response()->json(['message' => 'success', 'id' => $id]);
@@ -222,7 +268,12 @@ class AdminRoomController extends Controller
 
   public function show_facility(Request $request)
   {
-    $id = $request->id;
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+
     $facility = Facility::where('id', $id)->first();
     if ($facility) {
       return response()->json(['message' => 'success', 'facility' => $facility]);
@@ -257,7 +308,11 @@ class AdminRoomController extends Controller
 
   public function dealte_feature()
   {
-    $id = request('id');
+    try {
+      $id = Crypt::decryptstring(request('id'));
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
     $del = Feature::where('id', $id)->delete();
     if ($del) {
       return response()->json(['message' => 'success', 'id' => $id]);
@@ -268,7 +323,11 @@ class AdminRoomController extends Controller
 
   public function view_feature()
   {
-    $id = request('id');
+    try {
+      $id = Crypt::decryptstring(request('id'));
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
     $view = Feature::where('id', $id)->first();
     if ($view) {
       return response()->json(['message' => 'success', 'feature' => $view]);
@@ -279,7 +338,7 @@ class AdminRoomController extends Controller
 
   public function update_feature(Request $request)
   {
-    $id = $request->id;
+    $id = request('id');
     $name = $request->name;
     $feature = Feature::where('id', $id)->update(['name' => $name]);
     if ($feature) {

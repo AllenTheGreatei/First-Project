@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="box">
-        <h4 style="color:darkgrey;font-size:1.5em">Room Facility</h4>
+        <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Facility</h4>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_facility">Add New Facility</button>
     </div>
     <div class="table">
@@ -66,8 +66,8 @@
                         <tr class="row{{$facility->id}}">
                             <td>{{ $no++ }}</td>
                             <td>{{ $facility->name}}</td>
-                            <td><button class ="update-facility-btn" data-toggle="modal" data-target="#update_facility" value="{{ $facility->id}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
-                                <button class ="delete-facility-btn" value="{{ $facility->id}}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
+                            <td><button class ="update-facility-btn" data-toggle="modal" data-target="#update_facility" value="{{ Crypt::encryptstring($facility->id) }}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
+                                <button class ="delete-facility-btn" value="{{ Crypt::encryptstring($facility->id) }}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach
                     <button id="num" value="{{ $no }}" hidden></button>

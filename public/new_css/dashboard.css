@@ -40,6 +40,19 @@ body {
   z-index: 100;
 }
 
+.view_room .header {
+  padding: 1em;
+}
+
+.view_room {
+  padding: 1em;
+}
+
+.view_room .header h4 {
+  color: #787bff;
+  font-weight: 600;
+}
+
 .container #header {
   padding: 0 0 0 1em;
   color: #787bff;
@@ -283,6 +296,10 @@ hr {
   box-shadow: 0.1em 0.1em 1em rgb(212, 212, 212);
 }
 
+.dashboard-container .div h4 {
+  color: #787bff;
+  font-weight: 600;
+}
 /* .add {
   height: 125vh;
 } */

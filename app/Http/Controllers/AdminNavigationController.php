@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Room_Category;
 use App\Models\Facility;
 use App\Models\Feature;
+use App\Models\Admin;
 
 class AdminNavigationController extends Controller
 {
@@ -94,5 +95,12 @@ class AdminNavigationController extends Controller
   {
     $features = Feature::all();
     return view('Admin.__sub.feature', compact('features'));
+  }
+
+  public function admin_profile()
+  {
+    $adminid = session('adminId');
+    $admin = Admin::where('id', $adminid)->first();
+    return view('Admin.Auth.admin_profile', compact('admin')); 
   }
 }

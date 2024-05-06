@@ -135,3 +135,4 @@
   </div>
 </div>
 @endsection
+@extends('__partials.footer')

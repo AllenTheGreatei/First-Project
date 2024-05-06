@@ -6,8 +6,8 @@
         <tr class="row{{$feature->id}}">
             <td>{{ $no++ }}</td>
             <td>{{ $feature->name}}</td>
-            <td><button class ="update-feature-btn" data-toggle="modal" data-target="#update_feature" value="{{ $feature->id}}">EDIT</button>
-                <button class ="delete-feature-btn" value="{{ $feature->id}}">DELETE</button>
+            <td><button class ="update-feature-btn" data-toggle="modal" data-target="#update_feature" value="{{ Crypt::encryptstring($feature->id)}}">EDIT</button>
+                <button class ="delete-feature-btn" value="{{ Crypt::encryptstring($feature->id)}}">DELETE</button>
             </td>
         </tr>
     @endforeach

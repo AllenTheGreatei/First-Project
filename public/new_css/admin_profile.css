@@ -1,3 +1,27 @@
-.adminprofile-container .wrap {
-  padding: 2em;
+.adminprofile-container {
+  width: 100%;
+}
+
+.adminprofile-container .wraps {
+  padding: 2em 0 2em 3em;
+  border-color: red;
+}
+
+.adminprofile-container .wraps h4 {
+  color: #787bff;
+  font-weight: 600;
+}
+
+.adminprofile-container .containers {
+  padding: 0 3em 3em 3em;
+}
+
+.adminprofile-container .containers #admin_img {
+  height: 15em;
+  width: auto;
+  border-radius: 6px;
+}
+
+.adminprofile-container .containers label {
+  font-size: 0.9em;
 }

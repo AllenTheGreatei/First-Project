@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="box">
-        <h4 style="color:darkgrey;font-size:1.5em">Room Features</h4>
+        <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Features</h4>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_feature">Add New Feature</button>
     </div>
     <div class="table">
@@ -66,8 +66,8 @@
                         <tr class="row{{$feature->id}}">
                             <td>{{ $no++ }}</td>
                             <td>{{ $feature->name}}</td>
-                            <td><button class ="update-feature-btn" data-toggle="modal" data-target="#update_feature" value="{{ $feature->id}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
-                                <button class ="delete-feature-btn" value="{{ $feature->id}}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button>
+                            <td><button class ="update-feature-btn" data-toggle="modal" data-target="#update_feature" value="{{ Crypt::encryptstring($feature->id)}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
+                                <button class ="delete-feature-btn" value="{{ Crypt::encryptstring($feature->id)}}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button>
                             </td>
                         </tr>
                     @endforeach

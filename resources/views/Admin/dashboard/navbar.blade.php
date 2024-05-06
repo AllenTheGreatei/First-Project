@@ -12,7 +12,7 @@
             </div>
         </div>
         <hr>
-        <button><img id="profileicon"src="{{asset('assets/img/profile.png')}}" alt="">My Profile</button>
+        <button id="admin-profile"><img id="profileicon"src="{{asset('assets/img/profile.png')}}" alt="">My Profile</button>
         <hr>
         <button id="admin-logout"><img id="lout"src="{{asset('assets/img/turn-off.png')}}" alt="">Logout</button>
     </div>

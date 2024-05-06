@@ -1,6 +1,16 @@
 //user image
 
 // $('.dashboard-container').load(dashboardRoute);
+$(document).click(function (event) {
+  if (
+    !$(event.target).closest('.user_container').length &&
+    !$(event.target).is('.user_container') &&
+    !$(event.target).is('#user_img')
+  ) {
+    $('.user_container').css('display', 'none');
+    $('.user_container').css('pointer-events', 'none');
+  }
+});
 
 $(document).ready(function () {
   $('#arrow-btn').click(function () {
@@ -89,24 +99,25 @@ $(document).ready(function () {
       return currentValue === 'none' ? 'auto' : 'none';
     });
   });
+  
   $('#addnewroom').click(function () {
     $('.dashboard-container').load(addroomRoute);
 
-    $('#user_img').on('click', function () {
-      $('.user_container').css('display', function (_, currentValue) {
-        return currentValue === 'none' ? 'block' : 'none';
-      });
-      $('.user_container').css('pointer-events', function (_, currentValue) {
-        return currentValue === 'none' ? 'auto' : 'none';
-      });
-    });
+    // $('#user_img').on('click', function () {
+    //   $('.user_container').css('display', function (_, currentValue) {
+    //     return currentValue === 'none' ? 'block' : 'none';
+    //   });
+    //   $('.user_container').css('pointer-events', function (_, currentValue) {
+    //     return currentValue === 'none' ? 'auto' : 'none';
+    //   });
+    // });
   });
 
-  $('#viewroom').click(function () {
+  $('#viewroom').on('click', function () {
     $('.dashboard-container').load(viewroomRoute);
   });
 
-  $('#category').click(function () {
+  $('#category').on('click', function () {
     $('.dashboard-container').load(category);
   });
 
@@ -117,5 +128,14 @@ $(document).ready(function () {
   $('#feature').on('click', function () {
     $('.dashboard-container').load(feature);
   });
-  $('.dashboard-container').load(admin_profile);
+
+  $('#admin-profile').on('click', function () {
+    $('.dashboard-container').load(admin_profile);
+    $('.user_container').css('display', 'none');
+    $('.user_container').css('pointer-events', 'none');
+  });
+
+  $('#dashboard').on('click', function () {
+    $('.dashboard-container').load(dashboardRoute);
+  });
 });

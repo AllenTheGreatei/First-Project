@@ -75,7 +75,7 @@ $(document).ready(function () {
           success: function (data) {
             if (data.message == 'success') {
               success_msg('Deleted Successfully.');
-              $('.row' + room_id).hide();
+              $('.row' + data.id).hide();
             } else if (data.message == 'error') {
               error_msg('Failed to Delete.');
             } else {
@@ -612,7 +612,7 @@ $(document).ready(function () {
           $('#edit_feature_name').val(data.feature.name);
           $('#id_hidden').val(data.feature.id);
         } else {
-          error_msg('Something went wrong.');
+          error_msg('Opss! Something went wrong.');
           console.log(data);
         }
       },

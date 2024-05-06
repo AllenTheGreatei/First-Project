@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="wrap p-3">
-        <h4 style="color:darkgrey;font-size:1.5em">Room Category</h4>
+        <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Category</h4>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_category">Add New Category</button>
     </div>
     <div class="table">
@@ -66,8 +66,8 @@
                         <tr class="row{{$category->id}}">
                             <td>{{ $no++ }}</td>
                             <td>{{ $category->Name}}</td>
-                            <td><button class ="update-category-btn" data-toggle="modal" data-target="#update_category" value="{{ $category->id}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
-                                <button class ="delete-category-btn" value="{{ $category->id}}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
+                            <td><button class ="update-category-btn" data-toggle="modal" data-target="#update_category" value="{{ Crypt::encryptstring($category->id)}}"><i class='fa fa-edit mr-1' style='color:#efefeb'></i></button>
+                                <button class ="delete-category-btn" value="{{ Crypt::encryptstring($category->id) }}"><i class='fa fa-trash mr-1' style='color:#f2f3ed'></i></button></td>
                         </tr>
                     @endforeach
                     <button id="num" value="{{ $no }}" hidden></button>

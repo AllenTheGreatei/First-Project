@@ -17,7 +17,7 @@
           <!-- Logo -->
           <div class="app-brand justify-content-center">
             <a href="{{url('/')}}" class="app-brand-link gap-2">
-              <span class="app-brand-logo demo">@include('__partials.macros',["width"=>25,"withbg"=>'var(--bs-primary)'])</span>
+              {{-- <span class="app-brand-logo demo">@include('__partials.macros',["width"=>25,"withbg"=>'var(--bs-primary)'])</span> --}}
               <span class="app-brand-text demo text-body fw-bold text-capitalize">{{config('variables.templateName')}}</span>
             </a>
           </div>
@@ -45,8 +45,8 @@
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
                 <label class="form-label" for="password">Password<span style="color:red"> *</span></label>
-                <a href="{{url('auth/forgot-password-basic')}}">
-                  {{-- <small>Forgot Password?</small> --}}
+                <a href="{{url('forgot-password')}}">
+                  <small>Forgot Password?</small>
                 </a>
               </div>
               <div class="input-group input-group-merge">

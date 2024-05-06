@@ -6,8 +6,8 @@
         <tr class="row{{$category->id}}">
             <td>{{ $no++ }}</td>
             <td>{{ $category->Name}}</td>
-            <td><button class ="update-category-btn"  data-toggle="modal" data-target="#update_category" value="{{ $category->id }}">EDIT</button>
-                <button class ="delete-category-btn" value="{{ $category->id}}">DELETE</button></td>
+            <td><button class ="update-category-btn"  data-toggle="modal" data-target="#update_category" value="{{ Crypt::encryptstring($category->id) }}">EDIT</button>
+                <button class ="delete-category-btn" value="{{ Crypt::encryptstring($category->id)}}">DELETE</button></td>
         </tr>
     @endforeach
     <button id="num" value="{{ $no }}" hidden></button>

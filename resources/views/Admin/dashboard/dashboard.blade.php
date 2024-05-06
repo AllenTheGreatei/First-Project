@@ -11,3 +11,4 @@
 @include('Admin/dashboard.navbar')
 @include('Admin/dashboard.content')
 @extends('__partials.footer')
+<script src="{{ asset('new_js/dash.js')}}"></script>
