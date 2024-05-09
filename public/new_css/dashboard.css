@@ -550,3 +550,20 @@ hr {
 .user-list-table tbody tr .delete-feature-btn {
   background-color: #dc143c;
 }
+
+.booked-container {
+  width: 100%;
+  padding: 1em;
+}
+
+.booked-container .top {
+  padding: 1em;
+}
+
+.booked-container .top h4 {
+  font-weight: 600;
+}
+
+.booked-container .container-body {
+  background-color: red;
+}

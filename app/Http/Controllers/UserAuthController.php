@@ -20,8 +20,8 @@ class UserAuthController extends Controller
   //   return view('User/Auth/Register2');
   // }
 
-  // public function otp()
-  // {
-  //   return view('User/Auth/otp');
-  // }
+  public function otp()
+  {
+    return view('User.Auth.otp');
+  }
 }

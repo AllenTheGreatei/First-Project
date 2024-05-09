@@ -34,9 +34,19 @@
             <label for="" class="form-label">Retype-Password</label>
             <input type="password" class="form-control" id="admin_retypepass" name="admin_retypepass"> 
 
-            <button class="btn btn-primary mt-3" id="admin_save_pass"> Save Changes</button><br>
-            <label for="" class="form-label mt-3"><a id="admin_forgot_pass" href="">Forgot Password?</a></label>
-
+            <button class="btn btn-primary mt-3 mb-3" id="admin_save_pass"> Save Changes</button><br>
+            <hr>
+            <label for="" class="form-label mt-3"><a id="admin_forgot_pass" href="/">Forgot Password?</a></label>
+            <div class="row ml-1 mr-1" id="admin-forgot-div" style="display: none">
+                <span class="form-label" style="color:rgb(6, 212, 6)">We sent an OTP code in your gmail account.</span>
+                <label for="" class="form-label">Enter One Time Pin (OTP)</label>
+                <input type="number" class="form-control" id="forgot_otp" name="forgot_otp">
+                <label for="" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="forgot_new_pass" name="forgot_new_pass">
+                <label for="" class="form-label">Retype-Password</label>
+                <input type="password" class="form-control" id="forgot_retype_pass" name="forgot_retype_pass"> 
+                <button class="btn btn-primary mt-3 mb-3" style="width: 9em" id="admin_save_forgot_pass"> Save Changes</button><br>
+            </div>
         </form>
 
     </div>

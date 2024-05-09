@@ -10,17 +10,13 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create('admins', function (Blueprint $table) {
+    Schema::create('room_bookeds', function (Blueprint $table) {
       $table->id();
-      $table->string('first_name');
-      $table->string('last_name');
-      $table->string('username');
-      $table->string('email');
-      $table->string('password');
-      $table->mediumText('image');
-      $table->timestamps('email_verified_at');
+      $table->BigInteger('room_id');
+      $table->BigInteger('transaction_id');
+      $table->timestamp('check_in');
+      $table->timestamp('check_out');
       $table->timestamps();
-      $table->softDeletes();
     });
   }
 
@@ -29,6 +25,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists('admins');
+    Schema::dropIfExists('room_bookeds');
   }
 };

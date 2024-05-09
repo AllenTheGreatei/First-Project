@@ -157,3 +157,74 @@ $(document).ready(function () {
     }
   });
 });
+
+$('#admin_forgot_pass').on('click', function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: 'admin_send_otp',
+    method: 'POST',
+    dataType: 'json',
+    cache: false,
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function (data) {
+      if (data.message == 'success') {
+        $('#admin-forgot-div').css('display', 'block');
+      } else {
+        console.log(data);
+        error_msg('Opss! Something went wrong.');
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log(xhr.responseText);
+    }
+  });
+
+  $('#admin_save_forgot_pass').on('click', function (e) {
+    e.preventDefault();
+    let otp = $('#forgot_otp').val();
+    let new_pass = $('#forgot_new_pass').val();
+    let retypepass = $('#forgot_retype_pass').val();
+
+    if (!otp || !new_pass || !retypepass) {
+      warning_msg('Fields Required');
+    } else {
+      $.ajax({
+        url: 'admin_confirm_otp',
+        method: 'POST',
+        data: $('#admin-form').serialize(),
+        dataType: 'json',
+        cache: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          $('#admin_save_forgot_pass').prop('disabled', true);
+          $('#admin_save_forgot_pass').html('Saving..');
+        },
+        success: function (data) {
+          if (data.message == 'success') {
+            success_msg('Password Change Successfully.');
+            $('#admin-forgot-div').css('display', 'none');
+            $('#forgot_otp').val('');
+            $('#forgot_new_pass').val('');
+            $('#forgot_retype_pass').val('');
+          } else if (data.message == 'ivalid_otp') {
+            error_msg('Invalid OTP');
+          } else if (data.message == 'not_match') {
+            error_msg('New Password and Retype-Password not match.');
+          } else {
+            error_msg('Opss! SOmething went wrong.');
+            console.log(data);
+          }
+          $('#admin_save_forgot_pass').prop('disabled', false);
+          $('#admin_save_forgot_pass').html('Save Changes');
+        },
+        error: function (xhr, status, error) {
+          console.log(xhr.responseText);
+        }
+      });
+    }
+  });
+});

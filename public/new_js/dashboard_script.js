@@ -99,7 +99,7 @@ $(document).ready(function () {
       return currentValue === 'none' ? 'auto' : 'none';
     });
   });
-  
+
   $('#addnewroom').click(function () {
     $('.dashboard-container').load(addroomRoute);
 
@@ -137,5 +137,9 @@ $(document).ready(function () {
 
   $('#dashboard').on('click', function () {
     $('.dashboard-container').load(dashboardRoute);
+  });
+
+  $('#bookedbtn').on('click', function () {
+    $('.dashboard-container').load(bookedRoute);
   });
 });

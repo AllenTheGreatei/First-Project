@@ -33,7 +33,7 @@ class UserAjaxActionController extends Controller
       if (Auth::attempt($credentials)) {
         $user = Auth::user();
         if ($user->email_verified_at) {
-          session(['username' => $user->first_name . ' ' . $user->last_name]);
+          session(['username' => $user->first_name . ' ' . $user->last_name, 'user_id' => $user->id]);
           RateLimiter::clear($this->throttleKey());
           return response()->json(['message' => 'success']);
         } else {
@@ -80,7 +80,7 @@ class UserAjaxActionController extends Controller
     if ($user->email_verified_at) {
       if ($user) {
         Auth::login($user);
-        session(['username' => $user->first_name . ' ' . $user->last_name]);
+        session(['username' => $user->first_name . ' ' . $user->last_name, 'user_id' => $user->id]);
         return response()->json(['message' => 'success']);
       } else {
         return response()->json(['message' => 'errror']);
@@ -90,46 +90,41 @@ class UserAjaxActionController extends Controller
     }
   }
 
-  // public function sendOtp(Request $request)
-  // {
-  //   try {
-  //     $credentials = $request->validate([
-  //       'email' => ['required', 'email'],
-  //     ]);
-  //   } catch (\Throwable $th) {
-  //     return response()->json(['message' => 'wrongformat']);
-  //   }
+  public function sendOtp(Request $request)
+  {
+    // return response()->json(['message' => request('email')]);
 
-  //   // check if email already exist
-  //   $check = User::where('email', request('email'))->first();
-  //   if ($check) {
-  //     return response()->json(['message' => 'exist']);
-  //   } else {
-  //     //  Send Otp here
-  //     $randomOtp = random_int(100000, 999999);
-  //     $toEmail = request('email');
-  //     $subject = 'One Time Password';
-  //     $content = $randomOtp;
-  //     try {
-  //       Mail::to($toEmail)->send(new Email($subject, $content, $toEmail));
+    try {
+      $credentials = $request->validate([
+        'email' => ['required', 'email'],
+      ]);
+    } catch (\Throwable $th) {
+      return response()->json(['message' => 'wrongformat']);
+    }
 
-  //       session(['email' => request('email'), 'password' => request('password'), 'otp' => $randomOtp]);
-  //       return response()->json(['message' => 'success']);
-  //     } catch (\Exception $e) {
-  //       return response()->json(['message' => $e->getMessage()]);
-  //     }
-  //   }
-  // }
+    $randomOtp = random_int(100000, 999999);
+    $toEmail = request('email');
+    $subject = 'One Time Pin';
+    $content = $randomOtp;
+    try {
+      Mail::to($toEmail)->send(new Email($subject, $content, $toEmail));
 
-  // public function validate_otp(Request $request)
-  // {
-  //   if (session('otp') == request('otp') && request('otp') != '') {
-  //     Session::forget('otp');
-  //     return response()->json(['message' => 'success']);
-  //   } else {
-  //     return response()->json(['message' => 'fail']);
-  //   }
-  // }
+      session(['email' => request('email'), 'password' => request('password'), 'otp' => $randomOtp]);
+      return response()->json(['message' => 'success']);
+    } catch (\Exception $e) {
+      return response()->json(['message' => $e->getMessage()]);
+    }
+  }
+
+  public function validate_otp(Request $request)
+  {
+    if (session('otp') == request('otp') && request('otp') != '') {
+      Session::forget('otp');
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'fail']);
+    }
+  }
 
   public function register(Request $request)
   {
@@ -157,6 +152,20 @@ class UserAjaxActionController extends Controller
       } else {
         return response()->json(['message' => 'fail']);
       }
+    }
+  }
+
+  public function user_change_password(Request $request)
+  {
+    $email = session('email');
+    $newpassword = $request->newpassword;
+
+    $update = User::where('email', $email)->update(['password' => bcrypt($newpassword)]);
+    if ($update) {
+      session(['forgotpass' => 'Password Change Successfully.']);
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'failed']);
     }
   }
 }

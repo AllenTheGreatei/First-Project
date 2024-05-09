@@ -8,6 +8,8 @@ use App\Models\Room_Category;
 use App\Models\Facility;
 use App\Models\Feature;
 use App\Models\Admin;
+use App\Models\Booking;
+use App\Models\User;
 
 class AdminNavigationController extends Controller
 {
@@ -30,7 +32,13 @@ class AdminNavigationController extends Controller
 
   public function booked()
   {
-    return view('Admin/__div_list/booked');
+    $booked = Booking::where('status', 'Unpaid')
+      ->orderBy('room_id')
+      ->orderBy('check_in')
+      ->get();
+    $users = User::all();
+    $rooms = Room::all();
+    return view('Admin/__div_list/booked', compact('booked', 'users', 'rooms'));
   }
 
   public function dashboardbtn()
@@ -101,6 +109,6 @@ class AdminNavigationController extends Controller
   {
     $adminid = session('adminId');
     $admin = Admin::where('id', $adminid)->first();
-    return view('Admin.Auth.admin_profile', compact('admin')); 
+    return view('Admin.Auth.admin_profile', compact('admin'));
   }
 }

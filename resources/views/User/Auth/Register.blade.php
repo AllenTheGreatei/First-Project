@@ -92,7 +92,7 @@
                 <div class="col  px-0 mb-3 form-password-toggle">
                   <label class="form-label" for="password">Re-Type Password <span class="text-danger"> *</span></label>
                   <div class="input-group input-group-merge">
-                    <input type="password" id="retype-password" class="input form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                    <input type="password" id="retype-password" class="input form-control" name="retype-password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>

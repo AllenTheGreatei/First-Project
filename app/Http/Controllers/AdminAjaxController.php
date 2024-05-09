@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Mail\Email;
 
 class AdminAjaxController extends Controller
 {
@@ -36,7 +38,11 @@ class AdminAjaxController extends Controller
         if ($admin->email_verified_at) {
           Auth::guard('admin')->login($admin);
 
-          session(['adminName' => $admin->first_name . ' ' . $admin->last_name, 'adminId' => $admin->id]);
+          session([
+            'adminName' => $admin->first_name . ' ' . $admin->last_name,
+            'adminId' => $admin->id,
+            'admin_email' => $admin->email,
+          ]);
           RateLimiter::clear($this->throttleKey());
           return response()->json(['message' => 'success']);
         } else {
@@ -71,7 +77,11 @@ class AdminAjaxController extends Controller
     if ($user->email_verified_at) {
       if ($user) {
         Auth::guard('admin')->login($user);
-        session(['adminName' => $user->first_name . ' ' . $user->last_name, 'adminId' => $user->id]);
+        session([
+          'adminName' => $user->first_name . ' ' . $user->last_name,
+          'adminId' => $user->id,
+          'admin_email' => $user->email,
+        ]);
         return response()->json(['message' => 'success']);
       } else {
         return response()->json(['message' => 'errror']);
@@ -137,6 +147,48 @@ class AdminAjaxController extends Controller
         ]);
         return response()->json(['message' => 'success']);
       }
+    }
+  }
+
+  public function admin_send_otp()
+  {
+    $randomOtp = random_int(100000, 999999);
+    $toEmail = session('admin_email');
+    $subject = 'One Time Pin';
+    $content = $randomOtp;
+    try {
+      Mail::to($toEmail)->send(new Email($subject, $content, $toEmail));
+
+      session(['admin_otp' => $randomOtp]);
+      return response()->json(['message' => 'success']);
+    } catch (Exception $e) {
+      return response()->json(['message' => 'failed']);
+    }
+  }
+
+  public function admin_confirm_otp(Request $request)
+  {
+    $input_otp = $request->forgot_otp;
+    $new_pass = $request->forgot_new_pass;
+    $retype = $request->forgot_retype_pass;
+    $adminId = session('adminId');
+
+    if ($input_otp != session('admin_otp')) {
+      return response()->json(['message' => 'ivalid_otp']);
+    }
+
+    if ($new_pass !== $retype) {
+      return response()->json(['message' => 'not_match']);
+    }
+
+    $update_pass = Admin::where('id', $adminId)->update([
+      'password' => bcrypt($new_pass),
+    ]);
+
+    if ($update_pass) {
+      return response()->json(['message' => 'success']);
+    } else {
+      return response()->json(['message' => 'failed']);
     }
   }
 }

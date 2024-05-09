@@ -230,6 +230,88 @@ $(document).ready(function () {
       return currentValue === 'none' ? 'auto' : 'none';
     });
   });
+
+  $('#otp-submit').on('click', function () {
+    let otp = $('#otp').val();
+    if (!otp) {
+      error_msg('Field Required');
+    } else {
+      $.ajax({
+        url: 'validate_otp',
+        method: 'POST',
+        data: { otp },
+        dataType: 'json',
+        cache: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          $('#otp-submit').prop('disabled', true);
+          $('#otp-submit').html('Validating...');
+        },
+        success: function (data) {
+          if (data.message == 'success') {
+            success_msg('OPT Validated Successfully!');
+            $('#otp').val('');
+            window.location.href = 'forgot-pass-final';
+          } else {
+            console.log(data);
+            error_msg('Something went wrong!');
+          }
+          $('#otp-submit').prop('disabled', false);
+          $('#otp-submit').html('Submit');
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+          error_msg('An error occurred. Please try again later.');
+        }
+      });
+    }
+  });
+
+  $('#sendotp').click(function (e) {
+    e.preventDefault();
+    var gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail.com$/;
+    let email = $('#email').val();
+    if (!email) {
+      warning_msg('Fields Required');
+    } else {
+      if (!gmailPattern.test(email)) {
+        warning_msg('Invalid Email Format!');
+      } else {
+        $.ajax({
+          url: 'sendOtp',
+          method: 'POST',
+          data: $('#formAuthentication').serialize(),
+          dataType: 'json',
+          cache: false,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          beforeSend: function () {
+            $('#sendotp').prop('disabled', true);
+            $('#sendotp').html('Sending...');
+          },
+          success: function (data) {
+            if (data.message == 'success') {
+              success_msg('OPT Sent Successfully!');
+              window.location.href = 'otp';
+            } else {
+              console.log(data);
+              error_msg('Something went wrong!');
+            }
+            $('#sendotp').prop('disabled', false);
+            $('#sendotp').html('Send OTP');
+          },
+          error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+            error_msg('An error occurred. Please try again later.');
+          }
+        });
+      }
+    }
+  });
+
   //logout
   $('#logout').click(function () {
     Swal.fire({
@@ -314,6 +396,58 @@ $(document).ready(function () {
     }
   });
 
+  $('#change_pass').on('click', function (e) {
+    e.preventDefault();
+    let match = true;
+    let notnull = true;
+    let new_pass = $('.newpassword').val();
+    let retype_pass = $('.retype-password').val();
+    if (!new_pass || !retype_pass) {
+      warning_msg('Fields Required.');
+      notnull = false;
+    } else {
+      if (new_pass !== retype_pass) {
+        warning_msg('New Password and Retype-Password not match.');
+        match = false;
+      }
+    }
+    if (password_verify && match && notnull) {
+      $('.password-requirements').css('display', 'none');
+      $.ajax({
+        url: 'user-change-password',
+        method: 'POST',
+        data: $('#changepassform').serialize(),
+        dataType: 'json',
+        cache: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          $('#change_pass').prop('disabled', true);
+          $('#change_pass').html('Saving...');
+        },
+        success: function (data) {
+          if (data.message == 'success') {
+            success_msg('Password Change Successfully');
+            window.location.href = 'login';
+          } else {
+            error_msg('Opps! Something went wrong');
+            console.log(data);
+          }
+
+          $('#change_pass').prop('disabled', false);
+          $('#change_pass').html('Save');
+        },
+        error: function (xhr, status, error) {
+          console.error('Error:', xhr.responseText);
+          error_msg('An error occurred. Please try again later.');
+        }
+      });
+    } else {
+      $('.password-requirements').css('display', 'block');
+    }
+  });
+
   $('#Register-btn').on('click', function (e) {
     e.preventDefault();
     var isValid = true;
@@ -367,6 +501,7 @@ $(document).ready(function () {
     }
 
     if (isValid && !isnotblank && password_verify) {
+      $('.password-requirements').css('display', 'none');
       $.ajax({
         url: 'register',
         method: 'POST',
@@ -405,6 +540,8 @@ $(document).ready(function () {
           error_msg('An error occurred. Please try again later.');
         }
       });
+    } else {
+      $('.password-requirements').css('display', 'block');
     }
   });
 

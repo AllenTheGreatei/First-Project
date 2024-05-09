@@ -4,7 +4,7 @@
         <div class="modal-dialog modal-dialog-centered modal"role="document">
         <div class="modal-content"  >
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add New Facility</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Aminities</h5>
             </div>
             <div class="modal-body">
                 <form action="add_category_form">
@@ -26,7 +26,7 @@
         <div class="modal-dialog modal-dialog-centered modal"role="document">
         <div class="modal-content"  >
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Edit Facility</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Aminities</h5>
             </div>
             <div class="modal-body">
                 <form action="add_category_form">
@@ -45,8 +45,8 @@
         </div>
     </div>
     <div class="box">
-        <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Facility</h4>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_facility">Add New Facility</button>
+        <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Aminities</h4>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_facility">Add New Aminity</button>
     </div>
     <div class="table">
         <table class = "user-list-table">

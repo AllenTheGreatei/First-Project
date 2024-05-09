@@ -3,11 +3,13 @@
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserAjaxActionController;
 use App\Http\Controllers\UserNavigationController;
+use App\Http\Controllers\UserBookingController;
 
 use App\Http\Controllers\AdminNavigationController;
 use App\Http\Controllers\AdminAjaxController;
 use App\Http\Controllers\AdminRoomController;
 use App\Http\Controllers\VerifycationController;
+use App\Http\Controllers\AdminBookingController;
 
 Route::get('/', [UserNavigationController::class, 'index'])->name('home');
 
@@ -20,19 +22,45 @@ Route::get('/', [UserNavigationController::class, 'index'])->name('home');
 // USER
 // Auth::routes([
 //   'verify' => true,
-// ]);
+// ]);.
+
+// display_book
+// Filter
+
+Route::post('/filterby_aminities', [UserNavigationController::class, 'filterby_aminities'])->name(
+  '/filterby_aminities'
+);
+Route::post('/filterby_age', [UserNavigationController::class, 'filterby_age'])->name('/filterby_age');
+Route::post('/filterby_adult', [UserNavigationController::class, 'filterby_adult'])->name('/filterby_adult');
+Route::post('/filterby_category', [UserNavigationController::class, 'filterby_category'])->name('/filterby_category');
+Route::post('/filterbydate', [UserNavigationController::class, 'filterbydate'])->name('/filterbydate');
+
+Route::post('/display_book', [UserBookingController::class, 'display_book'])->name('display_book');
+Route::post('/booked', [UserBookingController::class, 'booked'])->name('booked');
+
+Route::get('/mybookings', [UserBookingController::class, 'mybookings'])->name('/mybookings');
+
+Route::get('/moredetails/{id}', [UserNavigationController::class, 'moredetails'])->name('moredetails');
+
 Route::get('email/verify/{id}/{hash}', [VerifycationController::class, 'verify'])->name('verification.verify');
 Route::get('/rooms', [UserNavigationController::class, 'rooms'])->name('rooms');
 Route::get('/home', [UserNavigationController::class, 'index'])->name('home');
 
+Route::get('/forgot-pass-final', function () {
+  return view('User.Auth.forgot-pass');
+});
+Route::post('/user-change-password', [UserAjaxActionController::class, 'user_change_password'])->name(
+  'user-change-password'
+);
+
 Route::post('/register', [UserAjaxActionController::class, 'register'])->name('register');
-// Route::post('/validate_otp', [UserAjaxActionController::class, 'validate_otp'])->name('validate_otp');
-// Route::post('/sendOtp', [UserAjaxActionController::class, 'sendOtp'])->name('sendOtp');
+Route::post('/validate_otp', [UserAjaxActionController::class, 'validate_otp'])->name('validate_otp');
+Route::post('/sendOtp', [UserAjaxActionController::class, 'sendOtp'])->name('sendOtp');
 Route::post('/google', [UserAjaxActionController::class, 'google_handler'])->name('google');
 Route::post('/login_ajax', [UserAjaxActionController::class, 'login_ajax'])->name('login_ajax');
 Route::post('/logout_ajax', [UserAjaxActionController::class, 'logout_ajax'])->name('logout_ajax');
 
-// Route::get('/otp', [UserAuthController::class, 'otp'])->name('otp');
+Route::get('/otp', [UserAuthController::class, 'otp'])->name('otp');
 Route::get('/register', [UserAuthController::class, 'register'])->name('register');
 // Route::get('/register2', [UserAuthController::class, 'register2'])->name('register2');
 Route::get('/login', [UserAuthController::class, 'index'])->name('login');
@@ -41,6 +69,13 @@ Route::get('forgot-password', function () {
 })->name('forgot-password');
 
 // ADMIN
+
+Route::post('/pay_display', [AdminBookingController::class, 'pay_display'])->name('pay_display');
+Route::post('/pay', [AdminBookingController::class, 'pay'])->name('pay');
+
+Route::post('/admin_confirm_otp', [AdminAjaxController::class, 'admin_confirm_otp'])->name('admin_confirm_otp');
+Route::post('/admin_send_otp', [AdminAjaxController::class, 'admin_send_otp'])->name('admin_send_otp');
+
 Route::post('/update_admin_prof', [AdminAjaxController::class, 'update_admin_prof'])->name('update_admin_prof');
 Route::post('/change_pass', [AdminAjaxController::class, 'change_pass'])->name('change_pass');
 

@@ -32,6 +32,11 @@
             <i class="bg-danger fa fa-check-circle mr-3" style="font-size:28px;color:white"></i>
             <p class="text-light lead mt-3" style="font-weight:500">{{session('error')}}</p>
           </div>
+          @elseif (session('forgotpass'))
+          <div id ="verifyinfo" style="background-color:lightgreen" class="pt-1 pb-.5 align-items-center justify-content-center rounded mb-3 d-flex">
+            <i class="fa fa-check-circle mr-3" style="font-size:28px;color:white"></i>
+            <p class="text-light lead mt-3" style="font-weight:500">{{session('forgotpass')}}</p>
+          </div>
           @endif
          
           <h4 class="mb-2">Welcome 👋</h4>

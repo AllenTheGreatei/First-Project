@@ -1,6 +1,6 @@
 @extends('__partials.commonMaster')
 
-@section('title', 'Register Basic - Pages')
+@section('title', 'OTP - Pages')
 
 @section('page-style')
 <!-- Page -->
@@ -30,4 +30,5 @@
     </div>
   </div>
 </div>
+@extends('__partials.footer')
 @endsection

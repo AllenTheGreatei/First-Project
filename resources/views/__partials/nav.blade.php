@@ -17,7 +17,7 @@
         <li class="nav-btn"><a class="a"href="#">Contact Us</a></li >
         <li class="nav-btn"><a class="a"href="#">About Us</a></li >
         @if (session('username')  && auth()->user() && auth()->user()->hasVerifiedEmail())
-            <li class="nav-btn"><a class="a"href="#">My Bookings</a></li >
+            <li class="nav-btn"><a class="a"href="/mybookings">My Bookings</a></li >
         @endif
     </div>
 

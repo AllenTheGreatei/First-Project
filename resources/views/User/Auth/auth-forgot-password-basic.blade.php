@@ -23,13 +23,13 @@
           </div>
           <!-- /Logo -->
           <h4 class="mb-2">Forgot Password? 🔒</h4>
-          <p class="mb-4">Enter your email and we'll send you instructions to reset your password</p>
+          <p class="mb-4">Enter your email and we'll send you otp to reset your password</p>
           <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="text" class="form-control mb-1" id="email" name="email" placeholder="Enter your email" autofocus>
             </div>
-            <button class="btn btn-primary mt-2 d-grid w-100">Send Reset Link</button>
+            <button class="btn btn-primary mt-2 d-grid w-100" id="sendotp">Send OTP</button>
           </form>
           <div class="text-center">
             <a href="{{url('login')}}" class="d-flex align-items-center justify-content-center">
@@ -43,4 +43,5 @@
     </div>
   </div>
 </div>
+@extends('__partials.footer')
 @endsection

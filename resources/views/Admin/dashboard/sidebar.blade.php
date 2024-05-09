@@ -15,11 +15,11 @@
             <li id="viewroom"class="li menubtn">View Room</li>
             <li id="addnewroom"class="li menubtn">Add New Room</li>
             <li id="category"class="li menubtn">Room Category</li>
-            <li id="facility"class="li menubtn">Facility</li>
+            <li id="facility"class="li menubtn">Aminities</li>
             <li id="feature"class="li menubtn">Feature</li>
             <button id="bookedbtn"class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/agenda.png')}}" alt="">Booked</button>
             <button class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/history.png')}}" alt="">History</button>
-            <button class="menubtn side-btn"><img class="sidebar-icon" src="{{asset('assets/img/settings.png')}}" alt="">Settings</button>
+            <button class="menubtn side-btn"><i style="font-size:1.8em" class="pl-1 pr-2 fa-regular fa-file-pdf"></i>Reports</button>
         </div>
     </div>
 </div>

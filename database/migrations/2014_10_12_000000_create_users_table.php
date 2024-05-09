@@ -18,9 +18,11 @@ return new class extends Migration {
       $table->bigInteger('contact_no');
       $table->string('email')->unique();
       $table->string('password');
+      $table->mediumText('image');
       $table->timestamp('email_verified_at')->nullable();
       $table->rememberToken();
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

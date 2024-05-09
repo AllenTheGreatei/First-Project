@@ -8,7 +8,7 @@
 </head>
 <body>
     <h3>{{ $subject }}</h3>
-    <h3>Thank you for registering {{ $gmail }}</h3>
+    <h3>Forgot Password? {{ $gmail }}</h3>
     <h4> Here is your One Time Pin (OTP) </h4>
     <h1 class="fs-2" >{{ $content }}</h1>
 </body>
