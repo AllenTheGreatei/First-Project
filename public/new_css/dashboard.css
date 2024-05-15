@@ -228,7 +228,6 @@ body.no-scroll-bar::-webkit-scrollbar {
   position: absolute;
   top: 6em;
   left: 20vw;
-  background-color: #ffffff;
   border-radius: 10px;
 }
 
@@ -566,4 +565,53 @@ hr {
 
 .booked-container .container-body {
   background-color: red;
+}
+
+.report-container {
+  width: 100%;
+  margin-bottom: 2em;
+  /* padding-top: 2em; */
+  /* padding: 1em;
+  background-color: #ffffff;
+  border-radius: 8px; */
+}
+
+.report-container .header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1em;
+  background-color: #ffffff;
+  border-radius: 4px;
+  flex-wrap: wrap;
+  box-shadow: 0.2em 0.2em 1em rgba(109, 108, 108, 0.3);
+}
+
+.report-container .head h4 {
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.report-container .filter {
+  gap: 2em;
+}
+
+.report-container .body {
+  margin-top: 1em;
+  padding: 1em;
+  padding-top: 1.5em;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0.2em 0.2em 1em rgba(109, 108, 108, 0.3);
+  padding-bottom: 2em;
+}
+
+.report-container .foot {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0.2em 0.2em 1em rgba(90, 98, 98, 0.3);
+  padding: 1em;
+  border-radius: 6px;
+  background-color: #ffffff;
 }

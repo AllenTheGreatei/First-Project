@@ -138,6 +138,7 @@ $(document).ready(function () {
   //User login
   $('#login-btn').click(function (e) {
     e.preventDefault();
+
     let check = false;
     let email = $('#email').val();
     let password = $('#password').val();
@@ -169,7 +170,7 @@ $(document).ready(function () {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        data: $('#login-form').serialize(),
+        data: { email: email, password: password },
         beforeSend: function () {
           $('#login-btn').prop('disabled', true);
           $('#login-btn').html('Validating...');

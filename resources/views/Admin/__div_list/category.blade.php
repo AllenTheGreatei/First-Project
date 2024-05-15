@@ -1,15 +1,15 @@
-<div class="category-container">
+<div class="category-container bg-white p-4 rounded">
     {{-- add modal --}}
     <div class="modal fade" id="add_category" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal"role="document">
         <div class="modal-content"  >
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add New Category</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Add New Room Type</h5>
             </div>
             <div class="modal-body">
                 <form action="add_category_form">
                     <div class="form-group">
-                        <label class="form-label">New Category</label>
+                        <label class="form-label">New Room Type</label>
                         <input type="text" id="category_name" name ="category_name" class="form-control">
                     </div>
                 </form>
@@ -26,12 +26,12 @@
         <div class="modal-dialog modal-dialog-centered modal"role="document">
         <div class="modal-content"  >
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Edit Category</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Room Type</h5>
             </div>
             <div class="modal-body">
                 <form action="add_category_form">
                     <div class="form-group">
-                        <label class="form-label">Category</label>
+                        <label class="form-label">Room Type</label>
                         <input type="text" hidden id="id_hidden">
                         <input type="text" id="edit_category_name" name ="edit_category_name" class="form-control">
                     </div>
@@ -46,7 +46,7 @@
     </div>
     <div class="wrap p-3">
         <h4 style="color:#787bff;font-size:1.5em;font-weight:600">Room Category</h4>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_category">Add New Category</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_category">Add New Room Type</button>
     </div>
     <div class="table">
         <table class = "user-list-table">
@@ -73,7 +73,7 @@
                     <button id="num" value="{{ $no }}" hidden></button>
                 @else
                 <tr>
-                    <td>No Categories Available</td>
+                    <td>No Room Type Available</td>
                 @endif
                 
             </tbody>

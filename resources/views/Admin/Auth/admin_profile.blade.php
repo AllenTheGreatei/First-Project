@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="{{ asset('new_css/admin_profile.css')}}">
-<div class="adminprofile-container">
-    <div class="wraps">
+<div class="adminprofile-container  bg-white p-4 rounded">
+    <div class="wraps ">
         <h4>My Profile</h4>
     </div>
     <div class="containers">

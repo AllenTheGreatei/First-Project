@@ -1,2 +1,2 @@
-// $('.dashboard-container').load(dashboardRoute);
-$('.dashboard-container').load(bookedRoute);
+$('.dashboard-container').load(dashboardRoute);
+// $('.dashboard-container').load(history);

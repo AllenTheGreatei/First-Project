@@ -1,3 +1,5 @@
+// const { error } = require('jquery');
+
 $('.browse').click(function () {
   $('#uploadImg').click();
 });
@@ -228,3 +230,122 @@ $('#admin_forgot_pass').on('click', function (e) {
     }
   });
 });
+
+$('#end').on('change', function () {
+  let from = $('#from').val();
+  let end = $('#end').val();
+
+  if (!from && !end) {
+    warning_msg('Filter Report First!');
+  } else {
+    $.ajax({
+      url: 'filter_report',
+      method: 'POST',
+      data: { from: from, end: end },
+      dataType: 'json',
+      cache: false,
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('.report_tbody').empty();
+        $('.report_tbody').append(`
+              <td>
+                  <h5 class="text-center text-secondary">Fetching Data...</h5>
+              </td>
+            `);
+        $('#total_revenue').html('Total Revenue : ₱ 0.00');
+      },
+      success: function (data) {
+        console.log(data);
+        if (data.message == 'success') {
+          $('.report_tbody').empty();
+          let rooms = data.data;
+          let no = 1;
+          let total = 0;
+          if (Object.keys(rooms).length > 0) {
+            rooms.forEach(element => {
+              $('.report_tbody').append(
+                `
+                  <tr>
+                    <td>` +
+                  no +
+                  `</td>
+                    <td><img class="pr-3 rounded-2" style="height: 4em; width: auto;" src="RoomImg/${element.image}">
+                    ${element.room_name}</td>
+                    <td>` +
+                  element.room_category +
+                  `</td>
+                    <td>` +
+                  element.price.toLocaleString('en-US', { style: 'currency', currency: 'PHP' }) +
+                  `</td>
+                    <td>` +
+                  parseInt(element.total_amount).toLocaleString('en-US', { style: 'currency', currency: 'PHP' }) +
+                  `</td>
+                  </tr>
+              `
+              );
+              no++;
+              total += parseInt(element.total_amount);
+            });
+            $('#total_revenue').html(
+              'Total Revenue : ' + total.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })
+            );
+          } else {
+            $('.report_tbody').append(`
+              <td>
+                  <h6 class="text-center text-danger">No Available Report</h6>
+              </td>
+            `);
+            $('#total_revenue').html(
+              'Total Revenue : ' + total.toLocaleString('en-US', { style: 'currency', currency: 'PHP' })
+            );
+          }
+        } else {
+          error_msg('Opps! Something went wrong.');
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  }
+});
+
+// $('#download-pdf').on('click', function (e) {
+//   e.preventDefault();
+//   let from = $('#from').val();
+//   let end = $('#end').val();
+
+//   if (!from || !end) {
+//     warning_msg('Filter Report First.');
+//   } else {
+//     $.ajax({
+//       url: 'download_report',
+//       method: 'GET',
+//       data: { from: from, end: end },
+//       headers: {
+//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//       },
+//       beforeSend: function () {
+//         $('#download-pdf').prop('disabled', true);
+//         $('#download-pdf').html('Downloading...');
+//       },
+//       success: function (data) {
+//         console.log(data);
+//         if (data.message == 'success') {
+//           //success
+//         } else {
+//           //failed
+//         }
+//         $('#download-pdf').prop('disabled', false);
+//         $('#download-pdf').html('Downlaod');
+//         $('#from').val('');
+//         $('#end').val('');
+//       },
+//       error: function (xhr, status, error) {
+//         console.log(xhr.responseText);
+//       }
+//     });
+//   }
+// });

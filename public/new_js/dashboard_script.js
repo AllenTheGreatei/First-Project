@@ -101,6 +101,7 @@ $(document).ready(function () {
   });
 
   $('#addnewroom').click(function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(addroomRoute);
 
     // $('#user_img').on('click', function () {
@@ -114,32 +115,49 @@ $(document).ready(function () {
   });
 
   $('#viewroom').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(viewroomRoute);
   });
 
   $('#category').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(category);
   });
 
   $('#facility').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(facilityRoute);
   });
 
   $('#feature').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(feature);
   });
 
   $('#admin-profile').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(admin_profile);
     $('.user_container').css('display', 'none');
     $('.user_container').css('pointer-events', 'none');
   });
 
   $('#dashboard').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(dashboardRoute);
   });
 
   $('#bookedbtn').on('click', function () {
+    $('.dashboard-container').empty();
     $('.dashboard-container').load(bookedRoute);
+  });
+
+  $('#report').on('click', function () {
+    $('.dashboard-container').empty();
+    $('.dashboard-container').load(reports);
+  });
+
+  $('#historybtn').on('click', function () {
+    $('.dashboard-container').empty();
+    $('.dashboard-container').load(historys);
   });
 });

@@ -1,4 +1,4 @@
-<div class="facility-container">
+<div class="facility-container bg-white p-4 rounded">
     {{-- add modal --}}
     <div class="modal fade" id="add_facility" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal"role="document">

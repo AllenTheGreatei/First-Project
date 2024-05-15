@@ -67,97 +67,135 @@ $(document).ready(function () {
       title: msg
     });
   }
-
-  let array_checkout = [];
-  $('#book_now').on('click', function () {
-    let notice = $('#notice').val();
-    var checkin = $('#start_date').val();
-    var checkout = $('#end_date').val();
-    function isOverlap(checkInDateInput, checkOutDateInput) {
-      const checkInDate = new Date(checkInDateInput);
-      const checkOutDate = new Date(checkOutDateInput);
-
-      for (let i = 0; i < array_checkout.length; i++) {
-        const existingCheckInDate = new Date(array_checkout[i][0]);
-        const existingCheckOutDate = new Date(array_checkout[i][1]);
-
-        // Check if either the check-in or check-out date falls within the range
-        if (
-          (existingCheckInDate >= checkInDate && existingCheckInDate <= checkOutDate) ||
-          (existingCheckOutDate >= checkInDate && existingCheckOutDate <= checkOutDate)
-        ) {
-          return true; // Overlapping date range found
-        }
-      }
-      return false; // No overlapping date range found
-    }
-
-    if (isOverlap(checkin, checkout)) {
-      error_msg('This Date is not available.');
-      return false;
-    }
-
-    let total_price = $('#real_total').val();
-    let room_id = $('#idholder').val();
-
-    const transaction = {
-      checkin,
-      checkout,
-      total_price,
-      room_id,
-      notice
-    };
-
-    if (!checkin || !checkout) {
-      warning_msg('Fields Required.');
-    } else {
-      $.ajax({
-        url: 'booked',
-        method: 'POST',
-        data: { transaction },
-        dataType: 'json',
-        cache: false,
-        headers: {
-          X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
-        },
-        beforeSend: function () {
-          $('#book_now').prop('disabled', true);
-          $('#book_now').html('Loading...');
-        },
-        success: function (data) {
-          if (data.message == 'success') {
-            success_msg('Room Booked Successfully.');
-          } else {
-            console.log(data);
-            error_msg('Opps! Something went wrong.');
-          }
-          $('#closebook').click();
-          $('#book_now').prop('disabled', false);
-          $('#book_now').html('Book Now');
-        },
-        error: function (xhr, status, error) {
-          console.log(xhr.responseText);
-          error_msg('Opss! Something went wrong.');
-        }
-      });
+  //
+  //
+  //
+  //
+  $('#start_date').on('change', function () {
+    var startDate = new Date($('#start_date').val());
+    if (!isNaN(startDate.getTime())) {
+      // Check if a valid date is entered
+      var endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 1); // Add one day to the start date
+      var formattedEndDate = endDate.toISOString().split('T')[0]; // Format the date as YYYY-MM-DD
+      $('#end_date').val(formattedEndDate); // Set the value of the end date input field
     }
   });
+  let array_checkout = [];
+  // $('#book_now').on('click', function (e) {
+  //   e.preventDefault();
+  //   let notice = $('#notice').val();
+  //   var checkin = $('#start_date').val();
+  //   var checkout = $('#end_date').val();
+  //   function isOverlap(checkInDateInput, checkOutDateInput) {
+  //     const checkInDate = new Date(checkInDateInput);
+  //     const checkOutDate = new Date(checkOutDateInput);
 
+  //     for (let i = 0; i < array_checkout.length; i++) {
+  //       const existingCheckInDate = new Date(array_checkout[i][0]);
+  //       const existingCheckOutDate = new Date(array_checkout[i][1]);
+
+  //       // Check if either the check-in or check-out date falls within the range
+  //       if (
+  //         (existingCheckInDate >= checkInDate && existingCheckInDate <= checkOutDate) ||
+  //         (existingCheckOutDate >= checkInDate && existingCheckOutDate <= checkOutDate)
+  //       ) {
+  //         return true; // Overlapping date range found
+  //       }
+  //     }
+  //     return false; // No overlapping date range found
+  //   }
+
+  //   if (isOverlap(checkin, checkout)) {
+  //     error_msg('This Date is not available.');
+  //     return false;
+  //   }
+
+  //   let total_price = $('#real_total').val();
+  //   let room_id = $('#idholder').val();
+
+  //   const transaction = {
+  //     checkin,
+  //     checkout,
+  //     total_price,
+  //     room_id,
+  //     notice
+  //   };
+
+  //   if (!checkin || !checkout) {
+  //     warning_msg('Fields Required.');
+  //   } else {
+  //     $.ajax({
+  //       url: 'session',
+  //       method: 'POST',
+  //       data: { transaction: transaction, _token: csrf_token },
+  //       dataType: 'json',
+  //       cache: false,
+  //       headers: {
+  //         X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+  //       },
+  //       beforeSend: function () {
+  //         $('#book_now').prop('disabled', true);
+  //         $('#book_now').html('Loading...');
+  //       },
+  //       success: function (data) {
+  //         if (data.message == 'success') {
+  //         } else {
+  //           console.error('Error:', data);
+  //         }
+  //         // $('#closebook').click();
+  //         $('#book_now').prop('disabled', false);
+  //         $('#book_now').html('Book Now');
+  //       },
+  //       error: function (xhr, status, error) {
+  //         console.log(xhr.responseText);
+  //         error_msg('Opss! Something went wrong.');
+  //       }
+  //     });
+  //   }
+  // });
+
+  //
+  //
+  //
+  //
+  //
+
+  var csrf_token = $('meta[name="csrf-token"]').attr('content');
   $('.right1').on('click', '.show-book', function () {
     let notice = $('#notice').val();
     let id = $(this).val();
-    console.log(id);
     var startDateValue = $('#start_date').val();
     var endDateValue = $('#end_date').val();
-    $('#start_date').val('');
+
+    if (!$('#fromdate').val() && !$('#enddate').val()) {
+      $('#start_date').val('');
+      $('#end_date').val('');
+    } else {
+      var startDateValue = $('#start_date').val();
+      var endDateValue = $('#end_date').val();
+
+      var startDate = new Date(startDateValue);
+      var endDate = new Date(endDateValue);
+
+      var differenceInTime = endDate.getTime() - startDate.getTime();
+      var differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+      $('#days').text(differenceInDays);
+
+      let total = differenceInDays * $('#real_price').val();
+
+      $('#real_total').val(total);
+      $('#total_p').html('₱ ' + total.toLocaleString('en-US'));
+    }
+
     $('#days').text('0');
-    $('#end_date').val('');
     $('#total_p').html('0');
     $('#idholder').val(id);
     $.ajax({
       url: 'display_book',
       method: 'POST',
-      data: { id: id, notice: notice },
+      data: { id: id, notice: notice, _token: csrf_token },
       dataType: 'json',
       cache: false,
       headers: {
@@ -167,6 +205,7 @@ $(document).ready(function () {
         $('.notavialablelist').empty();
         if (data.message == 'success') {
           $('#room_n').html(data.room.room_name);
+          $('#r_name').val(data.room.room_name);
           $('#room_p').html('₱ ' + data.room.price.toLocaleString('en-US') + ' /per night');
           $('#real_price').val(data.room.price);
           $('#r_img').attr('src', '/RoomImg/' + data.room.image);
@@ -182,6 +221,24 @@ $(document).ready(function () {
 
             i++;
           });
+
+          if ($('#fromdate').val() && $('#enddate').val()) {
+            var startDateValue = $('#start_date').val();
+            var endDateValue = $('#end_date').val();
+
+            var startDate = new Date(startDateValue);
+            var endDate = new Date(endDateValue);
+
+            var differenceInTime = endDate.getTime() - startDate.getTime();
+            var differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+            $('#days').text(differenceInDays);
+
+            let total = differenceInDays * $('#real_price').val();
+
+            $('#real_total').val(total);
+            $('#total_p').html('₱ ' + total.toLocaleString('en-US'));
+          }
 
           function formatDate(dateString) {
             var date = new Date(dateString);
@@ -288,6 +345,10 @@ $(document).ready(function () {
   });
 
   $('#enddate').on('change', function () {
+    $('#Sadult').val('');
+    $('#Schildren').val('');
+    $('.Saminities').prop('checked', false);
+    $('#select').prop('checked', false);
     $('#notice').val(1);
     let enddate = $(this).val();
     let fromdate = $('#fromdate').val();
@@ -303,6 +364,14 @@ $(document).ready(function () {
         cache: false,
         headers: {
           X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          $('.right1').empty();
+          $('.right1').append(`
+          <div class="right">
+            <h4 style="margin-top:.5em;margin-left:2em">Searching...</h4>
+          </div>
+          `);
         },
         success: function (data) {
           if (data.message == 'success') {
@@ -374,6 +443,11 @@ $(document).ready(function () {
     }
   });
   $('#Scategory').on('change', function () {
+    $('#enddate').val('');
+    $('#fromdate').val('');
+    $('#Sadult').val('');
+    $('#Schildren').val('');
+    $('.Saminities').prop('checked', false);
     $('#notice').val(1);
     let selected = $(this).val();
     $.ajax({
@@ -384,6 +458,14 @@ $(document).ready(function () {
       cache: false,
       headers: {
         X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('.right1').empty();
+        $('.right1').append(`
+        <div class="right">
+          <h4 style="margin-top:.5em;margin-left:2em">Searching...</h4>
+        </div>
+        `);
       },
       success: function (data) {
         if (data.message == 'success') {
@@ -454,6 +536,10 @@ $(document).ready(function () {
   });
 
   $('#Sadult').on('keyup', function () {
+    $('#enddate').val('');
+    $('#fromdate').val('');
+    $('#Schildren').val('');
+    $('.Saminities').prop('checked', false);
     $('#notice').val(1);
     let adult = $(this).val();
     $.ajax({
@@ -464,6 +550,14 @@ $(document).ready(function () {
       cache: false,
       headers: {
         X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('.right1').empty();
+        $('.right1').append(`
+        <div class="right">
+          <h4 style="margin-top:.5em;margin-left:2em">Searching...</h4>
+        </div>
+        `);
       },
       success: function (data) {
         if (data.message == 'success') {
@@ -533,6 +627,9 @@ $(document).ready(function () {
   });
 
   $('#Schildren').on('keyup', function () {
+    $('#enddate').val('');
+    $('#fromdate').val('');
+    $('.Saminities').prop('checked', false);
     $('#notice').val(1);
     let children = $(this).val();
     let adult = $('#Sadult').val();
@@ -544,6 +641,14 @@ $(document).ready(function () {
       cache: false,
       headers: {
         X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('.right1').empty();
+        $('.right1').append(`
+        <div class="right">
+          <h4 style="margin-top:.5em;margin-left:2em">Searching...</h4>
+        </div>
+        `);
       },
       success: function (data) {
         if (data.message == 'success') {
@@ -617,6 +722,10 @@ $(document).ready(function () {
   });
 
   $('.Saminities').on('click', function () {
+    $('#enddate').val('');
+    $('#fromdate').val('');
+    $('#Sadult').val('');
+    $('#Schildren').val('');
     $('.select').prop('checked', false);
     $(this).prop('checked', true);
     $('#notice').val(1);
@@ -629,6 +738,14 @@ $(document).ready(function () {
       cache: false,
       headers: {
         X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+      },
+      beforeSend: function () {
+        $('.right1').empty();
+        $('.right1').append(`
+        <div class="right">
+          <h4 style="margin-top:.5em;margin-left:2em">Searching...</h4>
+        </div>
+        `);
       },
       success: function (data) {
         console.log(data);
@@ -695,6 +812,200 @@ $(document).ready(function () {
       error: function (xhr, status, error) {
         console.log(xhr.responseText);
         error_msg('Opss! Something went wrong.');
+      }
+    });
+  });
+
+  $('#search').on('keyup', function () {
+    //   let search = $(this).val();
+    //   $.ajax({
+    //     url: 'search',
+    //     method: 'POST',
+    //     data: { search },
+    //     dataType: 'json',
+    //     cache: false,
+    //     headers: {
+    //       X_CSRF_TOKEN: $('meta[name="csrf-token"]').attr('content')
+    //     },
+    //     beforeSend: function () {
+    //       $('.room_tbody').empty();
+    //       $('.room_tbody').append(`
+    //         <tr>
+    //           <td>Searching..</td>
+    //         </tr>
+    //       `);
+    //     },
+    //     success: function (data) {
+    //       // console.log(data);
+    //       if (data.message == 'success') {
+    //         $('.room_tbody').empty();
+    //         let users = data.users;
+    //         let booked = data.booked;
+    //         let rooms = data.rooms;
+    //         let no = 1;
+    //         console.log(users);
+    //         users.forEach(element1 => {
+    //           $('.room_tbody').append(
+    //             `
+    //               <tr>
+    //               <td>` +
+    //               no +
+    //               `</td>
+    //               <td>` +
+    //               booked.forEach(element2 => {
+    //                 if (element1.id === element2.user_id) {
+    //                   element1.first_name;
+    //                   return false;
+    //                 }
+    //               }) +
+    //               `</td>
+    //               </tr>
+    //             `
+    //           );
+    //           no++;
+    //         });
+    //       }
+    //     },
+    //     error: function (xhr, status, error) {
+    //       console.log(xhr.responseText);
+    //       error_msg('Opss! Something went wrong.');
+    //     }
+    //   });
+  });
+
+  $('.cancel-show').on('click', function (e) {
+    $('#idhold').val($(this).val());
+  });
+
+  $('#cancel').on('click', function (e) {
+    e.preventDefault();
+    let id = $('#idhold').val();
+    let reason = $('#reason').val();
+    if (reason) {
+      $.ajax({
+        url: 'cancelbook',
+        method: 'post',
+        data: { reason: reason, id: id, _token: csrf_token },
+        beforeSend: function () {
+          $('#cancel').prop('disabled', true);
+          $('#cancel').html('Loading...');
+        },
+        success: function (data) {
+          console.log(data);
+          if (data.message == 'success') {
+            $('#c').click();
+            //
+          } else {
+            //
+          }
+          $('#cancel').prop('disabled', false);
+          $('#cancel').html('Submit');
+        },
+        error: function (xhr, status, error) {
+          console.log(xhr.responseText);
+        }
+      });
+    }
+  });
+
+  $('.view-reason').on('click', function (e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $('#idhold2').val(id);
+    $.ajax({
+      url: 'view-reason',
+      method: 'post',
+      data: { id: id, _token: csrf_token },
+      success: function (data) {
+        $('#reason2').val(data.data);
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+
+  $('#cancelreal').on('click', function (e) {
+    e.preventDefault();
+    let id = $('#idhold2').val();
+    $.ajax({
+      url: 'cancel-real',
+      method: 'post',
+      data: { id: id, _token: csrf_token },
+      success: function (data) {
+        if (data.message == 'success') {
+          $('#c').click();
+          success_msg('Cancelled Successfully!');
+        } else {
+          error_msg('Ops! Something went wrong!');
+          console.log(data);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+
+  $('.out').on('click', function () {
+    let id = $(this).val();
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes Checkout!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: 'out',
+          method: 'post',
+          data: { id: id, _token: csrf_token },
+          success: function (data) {
+            if (data.message == 'success') {
+              success_msg('Checkout Successfully!');
+            } else {
+              error_msg('Ops! Something went wrong!');
+              console.log(data);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+          }
+        });
+      }
+    });
+  });
+
+  $('.can').on('click', function () {
+    let id = $(this).val();
+
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes Cancel!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: 'can',
+          method: 'post',
+          data: { id: id, _token: csrf_token },
+          success: function (data) {
+            if (data.message == 'success') {
+              success_msg('Cancelled Successfully!');
+            } else {
+              error_msg('Ops! Something went wrong!');
+              console.log(data);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+          }
+        });
       }
     });
   });

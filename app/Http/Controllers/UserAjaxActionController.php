@@ -21,6 +21,7 @@ class UserAjaxActionController extends Controller
   {
     try {
       $this->CheckAttempt();
+      // return response()->json(['message' => $request->email]);
       try {
         $credentials = $request->validate([
           'email' => ['required', 'email'],

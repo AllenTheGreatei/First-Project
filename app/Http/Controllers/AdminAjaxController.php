@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Room;
+use App\Models\RoomBooked;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -11,6 +13,9 @@ use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Mail\Email;
+use Carbon\Carbon;
+// use Elibyy\TCPDF\Facades\TCPDF;
+use PDF;
 
 class AdminAjaxController extends Controller
 {
@@ -74,8 +79,8 @@ class AdminAjaxController extends Controller
   {
     $gemail = request('email');
     $user = Admin::where('email', $gemail)->first();
-    if ($user->email_verified_at) {
-      if ($user) {
+    if ($user) {
+      if ($user->email_verified_at) {
         Auth::guard('admin')->login($user);
         session([
           'adminName' => $user->first_name . ' ' . $user->last_name,
@@ -84,10 +89,10 @@ class AdminAjaxController extends Controller
         ]);
         return response()->json(['message' => 'success']);
       } else {
-        return response()->json(['message' => 'errror']);
+        return response()->json(['message' => 'notverified']);
       }
     } else {
-      return response()->json(['message' => 'notverified']);
+      return response()->json(['message' => 'errror']);
     }
   }
 
@@ -190,5 +195,68 @@ class AdminAjaxController extends Controller
     } else {
       return response()->json(['message' => 'failed']);
     }
+  }
+
+  public function reports()
+  {
+    $rooms = Room::leftJoin('bookings', 'rooms.id', '=', 'bookings.room_id')
+      ->where('bookings.status', '=', 'Checked Out')
+      ->select('rooms.*', \DB::raw('SUM(bookings.total_amount) as total_amount'))
+      ->groupBy('rooms.id')
+      ->get();
+    // $aminities = Facility::all();
+    // $feature = Feature::all();
+    // $total_room = Room::all();
+    // $room_type = Category::all();
+
+    return view('Admin.__div_list.reports', compact('rooms'));
+  }
+
+  public function filter_report(Request $request)
+  {
+    $from = $request->from;
+    $end = $request->end;
+
+    $rooms = Room::leftJoin('bookings', 'rooms.id', '=', 'bookings.room_id')
+      ->where('bookings.check_in', '<=', $end)
+      ->where('bookings.check_out', '>=', $from)
+      ->where('bookings.status', '=', 'Checked Out')
+      ->select('rooms.*', \DB::raw('SUM(bookings.total_amount) as total_amount'))
+      ->groupBy('rooms.id')
+      ->get();
+
+    if ($rooms) {
+      return response()->json(['message' => 'success', 'data' => $rooms]);
+    }
+  }
+
+  public function download_report(Request $request)
+  {
+    $from = $request->get('from');
+    $end = $request->get('end');
+    $startDate = Carbon::parse($from);
+    $endDate = Carbon::parse($end);
+    $numberOfDays = $endDate->diffInDays($startDate);
+
+    $rooms = Room::leftJoin('bookings', 'rooms.id', '=', 'bookings.room_id')
+      ->where('bookings.check_in', '<=', $end)
+      ->where('bookings.check_out', '>=', $from)
+      ->where('bookings.status', '=', 'Checked Out')
+      ->select('rooms.*', \DB::raw('SUM(bookings.total_amount) as total_amount'))
+      ->groupBy('rooms.id')
+      ->get();
+
+    $filename = 'hotel_report.pdf';
+    $html = view('Admin.report-format', compact('rooms', 'from', 'end', 'numberOfDays'))->render();
+
+    // $html = '<h1 style="color:red;">Hello World</h1>';
+
+    PDF::SetTitle('Hello World');
+    PDF::AddPage();
+    PDF::writeHTML($html, true, false, true, false, '');
+    PDF::SetFont('dejavusans', '', 12);
+
+    PDF::Output(public_path($filename), 'F');
+    return response()->download(public_path($filename));
   }
 }

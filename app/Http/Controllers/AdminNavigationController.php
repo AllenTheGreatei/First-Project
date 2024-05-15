@@ -10,6 +10,10 @@ use App\Models\Feature;
 use App\Models\Admin;
 use App\Models\Booking;
 use App\Models\User;
+use Carbon\Carbon;
+use App\Models\RoomBooked;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminNavigationController extends Controller
 {
@@ -32,7 +36,9 @@ class AdminNavigationController extends Controller
 
   public function booked()
   {
-    $booked = Booking::where('status', 'Unpaid')
+    $booked = Booking::where('check_out', '>', now())
+      ->where('status', '!=', 'Cancelled')
+      ->where('status', '!=', 'Checked Out')
       ->orderBy('room_id')
       ->orderBy('check_in')
       ->get();
@@ -43,7 +49,43 @@ class AdminNavigationController extends Controller
 
   public function dashboardbtn()
   {
-    return view('Admin/__div_list/dashboard');
+    $booked = Booking::where('status', 'Paid')
+      ->where('check_out', '>', now())
+      ->orderBy('room_id')
+      ->orderBy('check_in')
+      ->get();
+
+    $cancel = Booking::where('status', '=', 'Cancelled')->get();
+    // ->where('updated_at', '=', now())
+
+    $currentMonth = Carbon::now()->month;
+    $total_amount = Booking::whereMonth('check_in', $currentMonth)
+      ->whereMonth('check_out', $currentMonth)
+      ->Where('status', '=', 'Checked Out')
+      ->get();
+    $total = 0;
+    foreach ($total_amount as $totals) {
+      $total += $totals->total_amount;
+    }
+
+    $previousMonth = Carbon::now()->subMonth()->month;
+    $last_month = Booking::whereMonth('check_in', $previousMonth)
+      ->orWhereMonth('check_out', $previousMonth)
+      ->get();
+    $lastmonth_total = 0;
+    foreach ($last_month as $totals) {
+      $lastmonth_total += $totals->total_amount;
+    }
+
+    $users = User::where('email_verified_at', '!=', null)->get();
+    $rooms = Room::all();
+    $facilities = Facility::all();
+    $features = Feature::all();
+    $categories = Room_Category::all();
+    return view(
+      'Admin/__div_list/dashboard',
+      compact('rooms', 'facilities', 'features', 'categories', 'booked', 'total', 'lastmonth_total', 'users', 'cancel')
+    );
   }
 
   public function addRoom()
@@ -110,5 +152,90 @@ class AdminNavigationController extends Controller
     $adminid = session('adminId');
     $admin = Admin::where('id', $adminid)->first();
     return view('Admin.Auth.admin_profile', compact('admin'));
+  }
+
+  public function history()
+  {
+    $booked = Booking::where('status', 'Paid')
+      ->where('check_out', '<', now())
+      ->update([
+        'status' => 'Checked Out',
+      ]);
+    $booked = Booking::where('status', 'Paid')
+      ->where('check_out', '<', now())
+      ->orWhere('status', '=', 'Cancelled')
+      ->orWhere('status', '=', 'Checked Out')
+      ->orderBy('room_id')
+      ->orderBy('check_in')
+      ->get();
+    $users = User::all();
+    $rooms = Room::all();
+    return view('Admin/__div_list/history', compact('booked', 'users', 'rooms'));
+  }
+
+  public function search(Request $request)
+  {
+    $search = $request->search;
+
+    $users = User::where('first_name', 'like', '%' . $search . '%')
+      ->orWhere('last_name', 'like', '%' . $search . '%')
+      ->get();
+    $booked = Booking::where('status', 'Paid')
+      ->where('check_out', '>', now())
+      ->orderBy('room_id')
+      ->orderBy('check_in')
+      ->get();
+    $rooms = Room::all();
+
+    return response()->json(['message' => 'success', 'users' => $users, 'booked' => $booked, 'rooms' => $rooms]);
+  }
+
+  public function view_reason(Request $request)
+  {
+    $id = $request->id;
+    $g = Booking::where('id', $id)->first();
+    $data = $g->reason;
+    return response()->json(['message' => 'success', 'data' => $data]);
+  }
+
+  public function cancel_real(Request $request)
+  {
+    $id = $request->id;
+
+    $update = Booking::where('id', $id)->update([
+      'status' => 'Cancelled',
+    ]);
+    $hhh = RoomBooked::where('transaction_id', $id)->delete();
+
+    return response()->json(['message' => 'success']);
+  }
+
+  public function out(Request $request)
+  {
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+    $sss = RoomBooked::where('transaction_id', $id)->delete();
+    $sss = Booking::where('id', $id)->update([
+      'status' => 'Checked Out',
+    ]);
+
+    return response()->json(['message' => 'success']);
+  }
+
+  public function can(Request $request)
+  {
+    try {
+      $id = Crypt::decryptstring($request->id);
+    } catch (DecryptException $e) {
+      return response()->json(['message' => 'invalid_id']);
+    }
+    $sss = RoomBooked::where('transaction_id', $id)->delete();
+    $sss = Booking::where('id', $id)->update([
+      'status' => 'Cancelled',
+    ]);
+    return response()->json(['message' => 'success']);
   }
 }

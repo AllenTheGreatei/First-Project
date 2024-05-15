@@ -13,9 +13,9 @@
     <div class="nav-nav">
         <li class="nav-btn active"><a class="a active1" href="/home">Home</a></li >
         <li class="nav-btn"><a class="a" href="/rooms">Rooms</a></li >
-        <li class="nav-btn"><a class="a"href="#">Hotel Info</a></li >
-        <li class="nav-btn"><a class="a"href="#">Contact Us</a></li >
-        <li class="nav-btn"><a class="a"href="#">About Us</a></li >
+        <li class="nav-btn"><a class="a"href="hotel-info">Hotel Info</a></li >
+        <li class="nav-btn"><a class="a"href="contact">Contact Us</a></li >
+        <li class="nav-btn"><a class="a"href="about-us">About Us</a></li >
         @if (session('username')  && auth()->user() && auth()->user()->hasVerifiedEmail())
             <li class="nav-btn"><a class="a"href="/mybookings">My Bookings</a></li >
         @endif

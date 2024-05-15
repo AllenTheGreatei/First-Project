@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use App\Models\Booking;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class UserNavigationController extends Controller
 {
@@ -21,12 +23,16 @@ class UserNavigationController extends Controller
     // Extract the JSON content from the response
     $weatherData = json_decode($weatherResponse->getContent(), true);
 
+    $delete_booking = RoomBooked::where('check_out', '<', now())->delete();
+    $sss = Booking::where('check_out', '<', now())->update([
+      'status' => 'Checked Out',
+    ]);
     // Return the weather data to the view
     // return view('show', ['weatherData' => $weatherData]);
     return view('User/Home', ['weatherData' => $weatherData]);
   }
 
-  public function rooms()
+  public function rooms(Request $request)
   {
     $rooms = Room::all();
     $aminities = Facility::all();
