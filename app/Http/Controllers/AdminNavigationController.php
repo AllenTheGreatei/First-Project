@@ -165,8 +165,7 @@ class AdminNavigationController extends Controller
       ->where('check_out', '<', now())
       ->orWhere('status', '=', 'Cancelled')
       ->orWhere('status', '=', 'Checked Out')
-      ->orderBy('room_id')
-      ->orderBy('check_in')
+      ->orderBy('updated_at', 'desc')
       ->get();
     $users = User::all();
     $rooms = Room::all();
@@ -237,5 +236,18 @@ class AdminNavigationController extends Controller
       'status' => 'Cancelled',
     ]);
     return response()->json(['message' => 'success']);
+  }
+
+  public function booked_table()
+  {
+    $booked = Booking::where('check_out', '>', now())
+      ->where('status', '!=', 'Cancelled')
+      ->where('status', '!=', 'Checked Out')
+      ->orderBy('room_id')
+      ->orderBy('check_in')
+      ->get();
+    $users = User::all();
+    $rooms = Room::all();
+    return view('Admin.__sub.booked_table', compact('booked', 'users', 'rooms'));
   }
 }

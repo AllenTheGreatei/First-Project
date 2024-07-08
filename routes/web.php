@@ -157,6 +157,7 @@ Route::post('/admin_logout', [AdminAjaxController::class, 'logout_ajax'])->name(
 Route::get('/admin-login', [AdminNavigationController::class, 'index'])->name('admin-login');
 
 Route::middleware(['admin'])->group(function () {
+  Route::get('booked_table', [AdminNavigationController::class, 'booked_table'])->name('booked_table');
   Route::post('search', [AdminNavigationController::class, 'search'])->name('search');
   Route::get('download_report', [AdminAjaxController::class, 'download_report'])->name('download_report');
   Route::post('filter_report', [AdminAjaxController::class, 'filter_report'])->name('filter_report');

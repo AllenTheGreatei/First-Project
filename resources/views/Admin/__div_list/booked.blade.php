@@ -44,7 +44,7 @@
                     <th>ACTION</th>
                 </tr>
             </thead>
-            <tbody id ="table_body" class="room_tbody">
+            <tbody id ="table_body" class="room_tbody booked_body">
                 @php
                     $no = 1;
                 @endphp

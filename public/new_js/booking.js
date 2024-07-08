@@ -932,14 +932,21 @@ $(document).ready(function () {
       url: 'cancel-real',
       method: 'post',
       data: { id: id, _token: csrf_token },
+      beforeSend: function () {
+        $('#cancelreal').prop('disabled', true);
+        $('#cancelreal').html('Loading...');
+      },
       success: function (data) {
         if (data.message == 'success') {
           $('#c').click();
           success_msg('Cancelled Successfully!');
+          $('.booked_body').load(booked_table);
         } else {
           error_msg('Ops! Something went wrong!');
           console.log(data);
         }
+        $('#cancelreal').prop('disabled', false);
+        $('#cancelreal').html('Cancel Book');
       },
       error: function (xhr, status, error) {
         console.log(xhr.responseText);
@@ -947,7 +954,7 @@ $(document).ready(function () {
     });
   });
 
-  $('.out').on('click', function () {
+  $('.booked_body').on('click', '.out', function () {
     let id = $(this).val();
     Swal.fire({
       title: 'Are you sure?',
@@ -965,6 +972,7 @@ $(document).ready(function () {
           success: function (data) {
             if (data.message == 'success') {
               success_msg('Checkout Successfully!');
+              $('.booked_body').load(booked_table);
             } else {
               error_msg('Ops! Something went wrong!');
               console.log(data);
@@ -978,7 +986,7 @@ $(document).ready(function () {
     });
   });
 
-  $('.can').on('click', function () {
+  $('.booked_body').on('click', '.can', function () {
     let id = $(this).val();
 
     Swal.fire({
@@ -997,6 +1005,7 @@ $(document).ready(function () {
           success: function (data) {
             if (data.message == 'success') {
               success_msg('Cancelled Successfully!');
+              $('.booked_body').load(booked_table);
             } else {
               error_msg('Ops! Something went wrong!');
               console.log(data);

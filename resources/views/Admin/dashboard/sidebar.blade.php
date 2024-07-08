@@ -39,4 +39,5 @@
     var admin_profile = '{{ route("admin_profile")}}';
     var reports = '{{ route("reports")}}';
     var historys = '{{ route("history")}}';
+    var booked_table = '{{ route("booked_table")}}';
 </script>

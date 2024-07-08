@@ -68,7 +68,7 @@
                             <label class="form-label">Booked At : {{ \Carbon\Carbon::parse($data->created_at)->formatLocalized('%B %d, %Y ') }}</label><br>
 
                             <label class="form-label">Status : 
-                                @if ($data->status == 'Paid')
+                                @if ($data->status == 'Paid' || $data->status == 'Checked Out')
                                     @if ($data->check_in >= now())
                                         <span style="color:rgb(21, 236, 21)">Ongoing</span>
 

@@ -147,6 +147,4 @@ class UserBookingController extends Controller
 
     return response()->json(['message' => 'success']);
   }
-
-  
 }
